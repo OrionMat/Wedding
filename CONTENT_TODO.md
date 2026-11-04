@@ -9,13 +9,12 @@ Everything below is currently a placeholder or a guess on the live pages. Text l
 - [ ] **Hotels**: real recommendations by price band, plus any room blocks or discount codes (`travel.stay`)
 - [ ] **FAQ answers**: dress code, plus-ones, children, gift list (`faqs.items`, shown at the bottom of the Information page)
 - [ ] **RSVP provider**: deploy on Netlify (nothing to do) or set up Formspree
-- [ ] **French copy**: a first draft; have Josephine or family check it
+- [ ] **French copy**: a first draft; have Josephine or family check it (including the image labels, e.g. “Chez les grands-parents de Josephine”)
 
 ## Please check
 - [ ] Travel times and airport/station choices (`travel.getting`)
 - [ ] Things to Do list: add your personal picks and why you love them (`things.items`)
 - [ ] Reception map link: currently a Google Maps search for "Salle du Recatadou Labeaume" (`MAPS.reception`)
-- [ ] "To Josephine's Grandparents" was on the old Wix home page. Is it a dedication or a separate event? Not used yet.
 - [ ] Guests number field allows 1–6; adjust if needed (`src/views/Rsvp.astro`)
 
 ## Nice to have

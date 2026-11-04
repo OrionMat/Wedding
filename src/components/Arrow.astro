@@ -1,0 +1,31 @@
+---
+// Hand-drawn curved arrow from the old Wix site. In its natural orientation the tail
+// starts top-left and the curve sweeps down to an arrowhead pointing right.
+// Flip or rotate it with `transform` to point where you need.
+interface Props {
+  class?: string;
+  transform?: string;
+}
+const { class: className, transform } = Astro.props;
+---
+
+<svg
+  class:list={['arrow', className]}
+  viewBox="15 59 170 82"
+  aria-hidden="true"
+  fill="currentColor"
+  style={transform ? `transform: ${transform}` : undefined}
+>
+  <path
+    d="M80.697 138.566c15.411 2.675 31.224 3.108 46.775 1.484 15.656-1.635 31.162-5.358 45.706-11.403.59-.245 1.176-.499 1.763-.752q-.548.602-1.098 1.201c-2.223 2.42-4.635 4.761-6.513 7.462-.523.753-.715 1.763.198 2.297.918.537 2.187.061 2.926-.571 2.636-2.252 4.875-4.974 7.203-7.538 2.292-2.525 4.618-5.023 6.87-7.584.85-.967.578-2.814-.989-2.779l-9.234.208c-1.497.034-2.994.08-4.491.127-1.535.048-3.222-.083-4.737.195-1.154.212-2.341 1.182-2.33 2.444a1.823 1.823 0 0 0 1.645 1.796c.718.072 1.673-.277 2.206-.889 2.069.085 4.158.057 6.21.093l2.314.041c-26.951 10.931-56.442 15.137-85.353 11.555-13.951-1.728-28.044-4.957-40.691-11.249-11.491-5.717-21.863-14.501-26.952-26.518-2.656-6.271-4.007-13.209-3.43-20.021.575-6.791 3.027-12.713 6.867-18.297.581-.845-.554-1.114-1.121-.62-9.596 8.352-11.032 23.105-8.052 34.762 3.349 13.097 12.513 23.438 23.835 30.471 12.241 7.604 26.373 11.638 40.473 14.086Z"
+  ></path>
+</svg>
+
+<style>
+  .arrow {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+</style>

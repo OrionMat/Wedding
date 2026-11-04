@@ -8,9 +8,9 @@ export type Entry = { meta?: string; title: string; note?: string; link?: string
 export type Group = { label: string; entries: Entry[] };
 
 const en = {
-  names: 'Orion and Josephine',
+  names: 'Orion & Josephine',
   meta: {
-    description: 'Orion and Josephine are getting married on Saturday 3rd July 2027 in Labeaume, Ardèche.',
+    description: 'Orion & Josephine are getting married on Saturday 3rd July 2027 in Labeaume, Ardèche.',
   },
   nav: {
     menu: 'Menu',
@@ -31,11 +31,17 @@ const en = {
   },
   info: {
     title: 'Information',
+    church: 'Église Notre-Dame des Pommiers, L’Argentiere',
     date: 'Saturday 3rd July 2027',
-    place: 'Labeaume · Ardèche',
+    rsvp: 'RSVP',
+    notes: {
+      ceremony: ['Ceremony ·', 'Église, L’Argentiere'],
+      grandparents: ['To Josephine’s', 'Grandparents'],
+      reception: ['Reception ·', 'Salle du Recatadou'],
+    },
     venuesEyebrow: 'The day',
     venuesTitle: 'Where we’ll be',
-    ceremony: { label: 'Ceremony', name: 'Église Notre-Dame des Pommiers', town: 'Largentière' },
+    ceremony: { label: 'Ceremony', name: 'Église Notre-Dame des Pommiers', town: 'L’Argentiere' },
     reception: { label: 'Reception', name: 'Salle du Recatadou', town: 'Labeaume' },
     directions: 'Directions',
   },
@@ -66,7 +72,7 @@ const en = {
   timings: {
     title: 'Timings',
     items: [
-      { time: '14:00', title: 'Ceremony', place: 'Église Notre-Dame des Pommiers, Largentière' },
+      { time: '14:00', title: 'Ceremony', place: 'Église Notre-Dame des Pommiers, L’Argentiere' },
       { time: '15:00', title: 'Head to Labeaume', place: 'About 25 minutes by car' },
       { time: '16:00', title: 'Drinks & canapés', place: 'Salle du Recatadou' },
       { time: '19:00', title: 'Dinner', place: 'Salle du Recatadou' },
@@ -104,7 +110,7 @@ const en = {
     stayEyebrow: 'Staying in the Ardèche',
     stayTitle: 'Where to Stay',
     stayIntro:
-      'We recommend staying in or near Labeaume, Ruoms, Vallon-Pont-d’Arc or Largentière. You’ll be close to both the church and the reception, and right by the river.',
+      'We recommend staying in or near Labeaume, Ruoms, Vallon-Pont-d’Arc or L’Argentiere. You’ll be close to both the church and the reception, and right by the river.',
     stay: [
       // [CONFIRM] real recommendations, room blocks or discount codes
       { label: '€', entries: [{ title: 'Hotel to be confirmed' }, { title: 'Hotel to be confirmed' }] },
@@ -147,9 +153,9 @@ const en = {
 export type Content = typeof en;
 
 const fr: Content = {
-  names: 'Orion et Josephine',
+  names: 'Orion & Josephine',
   meta: {
-    description: 'Orion et Josephine se marient le samedi 3 juillet 2027 à Labeaume, en Ardèche.',
+    description: 'Orion & Josephine se marient le samedi 3 juillet 2027 à Labeaume, en Ardèche.',
   },
   nav: {
     menu: 'Menu',
@@ -169,11 +175,17 @@ const fr: Content = {
   },
   info: {
     title: 'Informations',
+    church: 'Église Notre-Dame des Pommiers, L’Argentiere',
     date: 'Samedi 3 juillet 2027',
-    place: 'Labeaume · Ardèche',
+    rsvp: 'RSVP',
+    notes: {
+      ceremony: ['Cérémonie ·', 'Église, L’Argentiere'],
+      grandparents: ['Chez les grands-parents', 'de Josephine'],
+      reception: ['Réception ·', 'Salle du Recatadou'],
+    },
     venuesEyebrow: 'Le jour J',
     venuesTitle: 'Où nous trouver',
-    ceremony: { label: 'Cérémonie', name: 'Église Notre-Dame des Pommiers', town: 'Largentière' },
+    ceremony: { label: 'Cérémonie', name: 'Église Notre-Dame des Pommiers', town: 'L’Argentiere' },
     reception: { label: 'Réception', name: 'Salle du Recatadou', town: 'Labeaume' },
     directions: 'Itinéraire',
   },
@@ -204,7 +216,7 @@ const fr: Content = {
   timings: {
     title: 'Programme',
     items: [
-      { time: '14h00', title: 'Cérémonie', place: 'Église Notre-Dame des Pommiers, Largentière' },
+      { time: '14h00', title: 'Cérémonie', place: 'Église Notre-Dame des Pommiers, L’Argentiere' },
       { time: '15h00', title: 'Route vers Labeaume', place: 'Environ 25 minutes en voiture' },
       { time: '16h00', title: 'Vin d’honneur', place: 'Salle du Recatadou' },
       { time: '19h00', title: 'Dîner', place: 'Salle du Recatadou' },
@@ -241,7 +253,7 @@ const fr: Content = {
     stayEyebrow: 'Séjourner en Ardèche',
     stayTitle: 'Où dormir',
     stayIntro:
-      'Nous vous conseillons de loger à Labeaume, Ruoms, Vallon-Pont-d’Arc ou Largentière : tout près de l’église, de la réception et de la rivière.',
+      'Nous vous conseillons de loger à Labeaume, Ruoms, Vallon-Pont-d’Arc ou L’Argentiere : tout près de l’église, de la réception et de la rivière.',
     stay: [
       { label: '€', entries: [{ title: 'Hôtel à confirmer' }, { title: 'Hôtel à confirmer' }] },
       { label: '€€', entries: [{ title: 'Hôtel à confirmer' }, { title: 'Hôtel à confirmer' }] },

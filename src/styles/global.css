@@ -9,9 +9,12 @@
   --color-on-ink: #fdfbf7;
   --color-denim: #6f86a6;
 
-  --font-display: 'Libre Caslon Display', 'Libre Caslon Text', Georgia, serif;
-  --font-serif: 'Libre Caslon Text', Georgia, serif;
-  --font-accent: 'Fraunces', Georgia, serif;
+  /* matches the old Wix site: Caudex for text, Caslon semibold for image labels,
+     Public Sans only for buttons and form fields */
+  --font-display: 'Caudex', Georgia, serif;
+  --font-serif: 'Caudex', Georgia, serif;
+  --font-accent: 'Caudex', Georgia, serif;
+  --font-label: 'Libre Caslon Text', 'Adobe Caslon Pro', Georgia, serif;
   --font-sans: 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   --radius-field: 15px;
@@ -37,8 +40,8 @@ body {
   margin: 0;
   background: var(--color-bg);
   color: var(--color-ink);
-  font-family: var(--font-sans);
-  font-size: 17px;
+  font-family: var(--font-serif);
+  font-size: 18px;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
@@ -117,8 +120,7 @@ p {
 }
 
 .eyebrow {
-  font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--color-ink-muted);
@@ -137,9 +139,9 @@ p {
 }
 
 .group-label {
-  font-family: var(--font-sans);
+  font-family: var(--font-serif);
   font-weight: 400;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--color-ink-muted);

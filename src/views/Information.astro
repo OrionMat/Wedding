@@ -2,9 +2,10 @@
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import FaqList from '../components/FaqList.astro';
+import Arrow from '../components/Arrow.astro';
 import recatadou from '../assets/illus-recatadou.png';
 import church from '../assets/illus-church-street.jpg';
-import { type Lang } from '../i18n';
+import { href, type Lang } from '../i18n';
 import { t } from '../content';
 import { MAPS } from '../config';
 
@@ -17,21 +18,45 @@ const c = all.info;
 ---
 
 <Base lang={lang} title={c.title}>
-  <section class="hero">
-    <Image
-      class="hero-illus"
-      src={recatadou}
-      alt="Watercolour of the Salle du Recatadou: a stone house on a clifftop above the Ardèche gorge"
-      widths={[480, 760, 1152]}
-      sizes="(max-width: 640px) 88vw, 560px"
-      loading="eager"
-      fetchpriority="high"
-    />
-    <h1 class="hero-names">{all.names}</h1>
-    <p class="hero-meta">
-      <span>{c.date}</span>
-      <span>{c.place}</span>
-    </p>
+  <section class="intro">
+    <figure class="church">
+      <Image
+        src={church}
+        alt="Watercolour of the stone steps in L’Argentiere climbing to the church spire, past Josephine’s grandparents’ house"
+        widths={[640, 1024]}
+        sizes="(max-width: 900px) 100vw, 900px"
+        loading="eager"
+        fetchpriority="high"
+      />
+      <figcaption class="note note--ceremony">
+        <span>{c.notes.ceremony[0]}<br />{c.notes.ceremony[1]}</span>
+        <Arrow transform="scaleX(-1)" />
+      </figcaption>
+      <p class="note note--grandparents">
+        <Arrow transform="rotate(180deg)" />
+        <span>{c.notes.grandparents[0]}<br />{c.notes.grandparents[1]}</span>
+      </p>
+    </figure>
+
+    <div class="title">
+      <h1>{all.names}</h1>
+      <p>{c.church}</p>
+      <p>{c.date}</p>
+      <a class="rsvp-pill" href={href(lang, 'rsvp')}>{c.rsvp}</a>
+    </div>
+
+    <figure class="reception" data-reveal>
+      <Image
+        src={recatadou}
+        alt="Watercolour of the Salle du Recatadou: a stone house on a clifftop above the Ardèche gorge"
+        widths={[560, 1048]}
+        sizes="(max-width: 760px) 84vw, 640px"
+      />
+      <figcaption class="note note--reception">
+        <span>{c.notes.reception[0]}<br />{c.notes.reception[1]}</span>
+        <Arrow transform="rotate(10deg)" />
+      </figcaption>
+    </figure>
   </section>
 
   <section class="page venues" aria-labelledby="venues-title">
@@ -40,14 +65,6 @@ const c = all.info;
         <p class="eyebrow">{c.venuesEyebrow}</p>
         <h2 class="section-title" id="venues-title">{c.venuesTitle}</h2>
       </header>
-      <Image
-        class="venues-illus"
-        src={church}
-        alt="Watercolour of stone steps climbing to a church spire"
-        widths={[640, 1024]}
-        sizes="(max-width: 640px) 90vw, 640px"
-        data-reveal
-      />
     </div>
     <div class="venue-grid">
       <article class="venue" data-reveal>
@@ -79,43 +96,101 @@ const c = all.info;
 </Base>
 
 <style>
-  .hero {
-    min-height: 100svh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  .intro {
+    padding: 64px 0 24px;
+  }
+  figure {
+    margin: 0;
+    position: relative;
+  }
+  figure img {
+    width: 100%;
+  }
+
+  /* hand-written annotations with arrows, as on the old Wix site */
+  .note {
+    position: absolute;
+    margin: 0;
+    font-family: var(--font-label);
+    font-weight: 600;
+    font-size: clamp(11px, 1.7vw, 15px);
+    line-height: 1.05;
+    color: #5a5a5a;
     text-align: center;
-    padding: 96px var(--gutter) 64px;
   }
-  .hero-illus {
-    width: min(560px, 88vw);
-    max-height: 48svh;
-    object-fit: contain;
-    margin-bottom: clamp(20px, 4vh, 40px);
-    animation: rise 1.4s ease both;
+  .note :global(.arrow) {
+    width: clamp(40px, 9vw, 80px);
   }
-  .hero-names {
-    font-size: clamp(2.6rem, 9vw, 5.2rem);
-    letter-spacing: -0.01em;
-    animation: rise 1.4s 0.2s ease both;
+
+  .church {
+    max-width: 900px;
+    margin: 0 auto;
   }
-  .hero-meta {
-    margin: 22px 0 0;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 13px;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--color-ink-soft);
-    animation: rise 1.4s 0.4s ease both;
+  .note--ceremony {
+    right: 2%;
+    top: 9%;
+  }
+  .note--ceremony :global(.arrow) {
+    margin: 4px 0 0 18%;
+  }
+  .note--grandparents {
+    left: 6%;
+    top: 97%;
+  }
+  .note--grandparents :global(.arrow) {
+    margin: 0 0 6px -4%;
+  }
+
+  .title {
+    text-align: center;
+    padding: clamp(72px, 12vw, 120px) var(--gutter) 0;
+    animation: rise 1.2s ease both;
+  }
+  .title h1 {
+    font-size: clamp(2.7rem, 8.5vw, 4.4rem);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 18px;
+  }
+  .title p {
+    font-size: clamp(1.1rem, 3vw, 1.4rem);
+    margin: 0 0 10px;
+  }
+  .rsvp-pill {
+    display: inline-block;
+    margin-top: 28px;
+    padding: 8px 30px 10px;
+    border-radius: var(--radius-pill);
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(44, 44, 44, 0.16);
+    color: #2171b5;
+    font-size: clamp(1.4rem, 4vw, 1.75rem);
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .rsvp-pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(44, 44, 44, 0.2);
   }
   @keyframes rise {
     from {
       opacity: 0;
       transform: translateY(14px);
     }
+  }
+
+  .reception {
+    max-width: 760px;
+    margin: clamp(48px, 8vw, 72px) auto 0;
+    padding: 0 var(--gutter) 0 calc(var(--gutter) + 14%);
+  }
+  .note--reception {
+    left: var(--gutter);
+    top: 9%;
+  }
+  .note--reception :global(.arrow) {
+    margin: 4px 0 0 30%;
   }
 
   .venues {
@@ -126,10 +201,6 @@ const c = all.info;
   .venues-head {
     text-align: center;
     margin-bottom: 40px;
-  }
-  .venues-illus {
-    width: 100%;
-    margin: 0 auto 48px;
   }
   .venue-grid {
     display: grid;
