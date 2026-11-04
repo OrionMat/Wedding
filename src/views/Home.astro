@@ -1,196 +1,77 @@
 ---
-import { Image, getImage } from 'astro:assets';
+import { getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import recatadou from '../assets/illus-recatadou.png';
-import church from '../assets/illus-church-street.jpg';
 import collage from '../assets/save-the-date-collage.jpg';
 import collagePortrait from '../assets/save-the-date-intro.jpg';
+import denimTile from '../assets/denim-tile.jpg';
 import { href, type Lang } from '../i18n';
 import { t } from '../content';
-import { WEDDING_DATE, MAPS } from '../config';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
-const c = t(lang).home;
+const c = t(lang);
 
+// Square collage on wide screens, the tall crop on portrait (phone) screens
+const portraitQuery = '(max-aspect-ratio: 3/4)';
+const square = await getImage({ src: collage, widths: [800, 1200, 2048], format: 'webp' });
 const portrait = await getImage({ src: collagePortrait, widths: [450, 900], format: 'webp' });
+// Mirrored patch of denim cut from the collage's corner; fills the sides on wide screens
+const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
 ---
 
 <Base lang={lang}>
-  <section class="hero">
-    <Image
-      class="hero-illus"
-      src={recatadou}
-      alt="Watercolour of the Salle du Recatadou: a stone house on a clifftop above the Ardèche gorge"
-      widths={[480, 760, 1152]}
-      sizes="(max-width: 640px) 88vw, 560px"
-      loading="eager"
-      fetchpriority="high"
-    />
-    <h1 class="hero-names">Orion <em>&amp;</em> Josephine</h1>
-    <p class="hero-meta">
-      <span>{c.date}</span>
-      <span>{c.place}</span>
-    </p>
-    <p class="countdown" data-countdown={WEDDING_DATE} data-unit={c.countdownUnit} data-today={c.countdownToday} data-past={c.countdownPast} aria-live="polite"></p>
-  </section>
+  <h1 class="sr-only">{c.names}</h1>
+  <section class="stage" style={`--denim: url(${denim.src})`}>
 
-  <section class="story" aria-labelledby="story-title">
-    <div class="column story-text" data-reveal>
-      <p class="eyebrow">{c.storyEyebrow}</p>
-      <h2 class="section-title" id="story-title">{c.storyTitle}</h2>
-      {c.story.map((p) => <p class="muted">{p}</p>)}
-    </div>
-
-    <div class="collage" data-reveal>
+    <div class="frame">
       <picture>
-        <source media="(max-width: 640px)" srcset={portrait.srcSet.attribute} sizes="100vw" />
-        <Image src={collage} alt={c.collageAlt} widths={[800, 1200, 2048]} sizes="(max-width: 1100px) 100vw, 1100px" />
+        <source media={portraitQuery} srcset={portrait.srcSet.attribute} sizes="100vw" />
+        <img
+          src={square.src}
+          srcset={square.srcSet.attribute}
+          sizes="min(100vw, 100svh)"
+          alt={c.home.collageAlt}
+          width="2048"
+          height="2048"
+          fetchpriority="high"
+        />
       </picture>
       <a class="tag" href={href(lang, 'rsvp')}>
         <span class="tag-hole" aria-hidden="true"></span>
-        RSVP
+        {c.home.rsvp}
       </a>
     </div>
   </section>
-
-  <section class="page venues" aria-labelledby="venues-title">
-    <div class="column">
-      <header class="venues-head" data-reveal>
-        <p class="eyebrow">{c.venuesEyebrow}</p>
-        <h2 class="section-title" id="venues-title">{c.venuesTitle}</h2>
-      </header>
-    </div>
-    <div class="venue-grid">
-      <article class="venue" data-reveal>
-        <Image src={church} alt="Watercolour of stone steps climbing to a church spire" widths={[440, 880]} sizes="(max-width: 760px) 90vw, 440px" />
-        <p class="eyebrow">{c.ceremony.label}</p>
-        <h3>{c.ceremony.name}</h3>
-        <p class="muted">{c.ceremony.town}</p>
-        <a class="text-link" href={MAPS.ceremony} target="_blank" rel="noopener">{c.directions} ↗</a>
-      </article>
-      <article class="venue" data-reveal>
-        <Image src={recatadou} alt="Watercolour of the Salle du Recatadou above the gorge" widths={[440, 880]} sizes="(max-width: 760px) 90vw, 440px" />
-        <p class="eyebrow">{c.reception.label}</p>
-        <h3>{c.reception.name}</h3>
-        <p class="muted">{c.reception.town}</p>
-        <a class="text-link" href={MAPS.reception} target="_blank" rel="noopener">{c.directions} ↗</a>
-      </article>
-    </div>
-  </section>
-
-  <section class="cta" data-reveal>
-    <h2 class="section-title">{c.ctaTitle}</h2>
-    <p class="muted">{c.ctaText}</p>
-    <a class="btn" href={href(lang, 'rsvp')}>{c.ctaButton}</a>
-  </section>
 </Base>
 
-<script>
-  const el = document.querySelector<HTMLElement>('[data-countdown]');
-  if (el) {
-    const target = new Date(el.dataset.countdown!);
-    const day = 86_400_000;
-    const now = new Date();
-    const startOf = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
-    const days = Math.round((startOf(target) - startOf(now)) / day);
-    if (days > 0) {
-      el.innerHTML = `<strong>${days.toLocaleString(document.documentElement.lang)}</strong> ${el.dataset.unit}`;
-    } else {
-      el.textContent = days === 0 ? el.dataset.today! : el.dataset.past!;
-    }
-  }
-</script>
-
 <style>
-  .hero {
-    min-height: 100svh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 96px var(--gutter) 64px;
-  }
-  .hero-illus {
-    width: min(560px, 88vw);
-    max-height: 48svh;
-    object-fit: contain;
-    margin-bottom: clamp(20px, 4vh, 40px);
-    animation: rise 1.4s ease both;
-  }
-  .hero-names {
-    font-size: clamp(3rem, 11vw, 6rem);
-    letter-spacing: -0.01em;
-    animation: rise 1.4s 0.2s ease both;
-  }
-  .hero-names em {
-    font-family: var(--font-accent);
-    font-weight: 300;
-    font-size: 0.8em;
-    color: var(--color-ink-muted);
-  }
-  .hero-meta {
-    margin: 22px 0 0;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 13px;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--color-ink-soft);
-    animation: rise 1.4s 0.4s ease both;
-  }
-  .countdown {
-    margin: 28px 0 0;
-    min-height: 1.6em;
-    font-family: var(--font-accent);
-    font-style: italic;
-    font-weight: 300;
-    font-size: 1.1rem;
-    color: var(--color-ink-muted);
-    animation: rise 1.4s 0.6s ease both;
-  }
-  .countdown :global(strong) {
-    font-family: var(--font-display);
-    font-style: normal;
-    font-weight: 400;
-    font-size: 1.6em;
-    color: var(--color-ink);
-    margin-right: 4px;
-  }
-  @keyframes rise {
-    from {
-      opacity: 0;
-      transform: translateY(14px);
-    }
-  }
-
-  .story {
-    padding: 64px 0 0;
-    border-top: 1px solid var(--color-rule);
-  }
-  .story-text {
-    padding: 0 var(--gutter);
-    text-align: center;
-    margin-bottom: 40px;
-  }
-
-  .collage {
+  .stage {
     position: relative;
-    max-width: 1100px;
-    margin: 0 auto;
+    display: grid;
+    place-items: center;
+    min-height: 100svh;
     overflow: hidden;
+    /* drawn at the same scale as the collage so the weave matches */
+    background: #8ea2bb var(--denim) center / calc(min(100vw, 100svh) * 1480 / 2048) auto repeat;
   }
-  @media (min-width: 1100px) {
-    .collage {
-      border-radius: var(--radius-card);
-    }
+
+  .frame {
+    position: relative;
+    width: min(100vw, 100svh);
+    aspect-ratio: 1;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent),
+      linear-gradient(to bottom, transparent, #000 5%, #000 95%, transparent);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent),
+      linear-gradient(to bottom, transparent, #000 5%, #000 95%, transparent);
+    mask-composite: intersect;
   }
-  .collage img {
+  .frame img {
     width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   /* kraft luggage tag that sat on the letter in the Wix version */
@@ -205,7 +86,7 @@ const portrait = await getImage({ src: collagePortrait, widths: [450, 900], form
     background: var(--color-kraft);
     background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.18), rgba(0, 0, 0, 0.06));
     color: #2c2418;
-    font: 600 clamp(13px, 1.6vw, 17px) / 1 var(--font-sans);
+    font: 600 clamp(13px, 1.8vmin, 18px) / 1 var(--font-sans);
     letter-spacing: 0.14em;
     text-decoration: underline;
     text-underline-offset: 3px;
@@ -224,49 +105,15 @@ const portrait = await getImage({ src: collagePortrait, widths: [450, 900], form
     background: #e9e2d2;
     box-shadow: inset 0 0 0 2px #c9a24a;
   }
-  @media (max-width: 640px) {
+
+  @media (max-aspect-ratio: 3/4) {
+    .frame {
+      width: min(100vw, calc(100svh * 9 / 16));
+      aspect-ratio: 9 / 16;
+    }
     .tag {
       left: 34%;
       top: 88%;
     }
-  }
-
-  .venues {
-    padding-top: 96px;
-  }
-  .venues-head {
-    text-align: center;
-    margin-bottom: 48px;
-  }
-  .venue-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-    gap: 56px 48px;
-    max-width: 960px;
-    margin: 0 auto;
-  }
-  .venue {
-    text-align: center;
-  }
-  .venue img {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: contain;
-    margin-bottom: 20px;
-  }
-  .venue h3 {
-    font-size: 1.7rem;
-    margin-bottom: 6px;
-  }
-  .venue .muted {
-    margin-bottom: 10px;
-  }
-
-  .cta {
-    text-align: center;
-    padding: 24px var(--gutter) 112px;
-  }
-  .cta .btn {
-    margin-top: 12px;
   }
 </style>

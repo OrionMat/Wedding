@@ -1,7 +1,7 @@
-# Orion & Josephine: wedding website
+# Orion and Josephine: wedding website
 
 Static [Astro](https://astro.build) site for our wedding on **Saturday 3rd July 2027** in Labeaume, Ardèche.
-Pages: Home, RSVP, Timings, Travel & Accommodation, Things to Do, FAQs, in English (`/`) and French (`/fr/`).
+Pages: Home (the save-the-date letter), Information, RSVP, Timings, Travel & Accommodation, Things to Do, FAQs, in English (`/`) and French (`/fr/`).
 
 ## Run it locally
 
@@ -17,11 +17,11 @@ npm run preview    # serve the built site
 | What | Where |
 |---|---|
 | All page text (EN + FR) | `src/content.ts` |
-| Wedding date/time, RSVP provider, contact email, map links | `src/config.ts` |
+| RSVP provider, map links | `src/config.ts` |
 | Images | `src/assets/` (optimised automatically at build) |
 | Colours, fonts, spacing | `src/styles/global.css` (`:root` tokens) |
 | Page layouts | `src/views/*.astro` (each is used by both `src/pages/` and `src/pages/fr/`) |
-| Menu, header, footer | `src/layouts/Base.astro` |
+| Menu and header | `src/layouts/Base.astro` |
 | Placeholder page vignettes | `src/components/Vignette.astro` |
 
 Outstanding details to fill in are listed in [CONTENT_TODO.md](CONTENT_TODO.md).

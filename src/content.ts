@@ -8,14 +8,16 @@ export type Entry = { meta?: string; title: string; note?: string; link?: string
 export type Group = { label: string; entries: Entry[] };
 
 const en = {
+  names: 'Orion and Josephine',
   meta: {
-    description: 'Orion & Josephine are getting married on Saturday 3rd July 2027 in Labeaume, Ardèche.',
+    description: 'Orion and Josephine are getting married on Saturday 3rd July 2027 in Labeaume, Ardèche.',
   },
   nav: {
     menu: 'Menu',
     close: 'Close',
     pages: {
       '': 'Home',
+      information: 'Information',
       rsvp: 'RSVP',
       timings: 'Timings',
       travel: 'Travel & Accommodation',
@@ -24,11 +26,14 @@ const en = {
     },
   },
   home: {
+    collageAlt:
+      'Our save-the-date: a handwritten letter on denim, with a "Greetings from London" postcard, a kraft envelope and a photo-booth strip of the two of us. The letter reads: Hello Rafifio, It’s been a short, sweet decade since Josephine mistook a guy at her university bar as being French. Then, a mere year after that, she mistook him again for his housemate. Now after graduating, moving countries, moving in together, we’re asking you to save this date: July 3rd 2027 in Labeaume, Ardèche. Because we’re getting married! It’s beside a beautiful village where Josephine spent her summers growing up. If you can’t make it, hakuna matata, just let us know. Full details to follow. Merci! Josephine and Orion.',
+    rsvp: 'RSVP',
+  },
+  info: {
+    title: 'Information',
     date: 'Saturday 3rd July 2027',
     place: 'Labeaume · Ardèche',
-    countdownUnit: 'days to go',
-    countdownToday: 'Today’s the day!',
-    countdownPast: 'Just married',
     storyEyebrow: 'Save the date',
     storyTitle: 'A short, sweet decade',
     story: [
@@ -36,8 +41,6 @@ const en = {
       'Now, after graduating, moving countries and moving in together, we’re getting married, beside the beautiful village where Josephine spent her summers growing up.',
       'If you can’t make it: hakuna matata, just let us know. Merci!',
     ],
-    collageAlt:
-      'Our save-the-date: a handwritten letter on denim, with a "Greetings from London" postcard, a kraft envelope and a photo-booth strip of the two of us. The letter reads: It’s been a short, sweet decade since Josephine mistook a guy at her university bar as being French. Then, a mere year after that, she mistook him again for his housemate. Now after graduating, moving countries, moving in together, we’re asking you to save this date: July 3rd 2027 in Labeaume, Ardèche. Because we’re getting married! It’s beside a beautiful village where Josephine spent her summers growing up. If you can’t make it, hakuna matata, just let us know. Full details to follow. Merci! Josephine and Orion.',
     venuesEyebrow: 'The day',
     venuesTitle: 'Where we’ll be',
     ceremony: { label: 'Ceremony', name: 'Église Notre-Dame des Pommiers', town: 'Largentière' },
@@ -148,23 +151,24 @@ const en = {
       { q: 'What will the weather be like?', a: 'Early July in the Ardèche is usually hot and sunny, often above 30°C. Bring sunglasses and sunscreen!' },
       { q: 'Is there parking?', a: 'Yes, there will be parking near both the church and the reception.' },
       { q: 'Do you have a gift list?', a: 'Having you there is the best gift. Details to follow.' },
-      { q: 'Who do I contact with questions?', a: 'Drop us an email and we’ll get back to you.' },
+      { q: 'Who do I contact with questions?', a: 'Just message either of us and we’ll get back to you.' },
     ],
   },
-  footer: { made: 'Made with love for 3rd July 2027' },
 };
 
 export type Content = typeof en;
 
 const fr: Content = {
+  names: 'Orion et Josephine',
   meta: {
-    description: 'Orion & Josephine se marient le samedi 3 juillet 2027 à Labeaume, en Ardèche.',
+    description: 'Orion et Josephine se marient le samedi 3 juillet 2027 à Labeaume, en Ardèche.',
   },
   nav: {
     menu: 'Menu',
     close: 'Fermer',
     pages: {
       '': 'Accueil',
+      information: 'Informations',
       rsvp: 'RSVP',
       timings: 'Programme',
       travel: 'Voyage & Hébergement',
@@ -173,11 +177,13 @@ const fr: Content = {
     },
   },
   home: {
+    collageAlt: en.home.collageAlt,
+    rsvp: 'RSVP',
+  },
+  info: {
+    title: 'Informations',
     date: 'Samedi 3 juillet 2027',
     place: 'Labeaume · Ardèche',
-    countdownUnit: 'jours à attendre',
-    countdownToday: 'C’est aujourd’hui !',
-    countdownPast: 'Jeunes mariés',
     storyEyebrow: 'Réservez la date',
     storyTitle: 'Une courte et douce décennie',
     story: [
@@ -185,7 +191,6 @@ const fr: Content = {
       'Aujourd’hui, après les diplômes, les déménagements d’un pays à l’autre et la vie à deux, nous nous marions, près du beau village où Josephine a passé tous ses étés d’enfance.',
       'Si vous ne pouvez pas venir : hakuna matata, dites-le-nous simplement. Merci !',
     ],
-    collageAlt: en.home.collageAlt,
     venuesEyebrow: 'Le jour J',
     venuesTitle: 'Où nous trouver',
     ceremony: { label: 'Cérémonie', name: 'Église Notre-Dame des Pommiers', town: 'Largentière' },
@@ -293,10 +298,9 @@ const fr: Content = {
       { q: 'Quel temps fera-t-il ?', a: 'Début juillet, il fait généralement chaud et beau en Ardèche, souvent plus de 30 °C. Lunettes de soleil et crème solaire !' },
       { q: 'Y a-t-il un parking ?', a: 'Oui, il y aura un parking près de l’église et de la réception.' },
       { q: 'Avez-vous une liste de mariage ?', a: 'Votre présence est le plus beau des cadeaux. Détails à venir.' },
-      { q: 'Qui contacter en cas de question ?', a: 'Envoyez-nous un e-mail, nous vous répondrons.' },
+      { q: 'Qui contacter en cas de question ?', a: 'Écrivez à l’un de nous deux, nous vous répondrons.' },
     ],
   },
-  footer: { made: 'Fait avec amour pour le 3 juillet 2027' },
 };
 
 export const content: Record<Lang, Content> = { en, fr };
