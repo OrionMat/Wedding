@@ -1,0 +1,16 @@
+---
+import Vignette from './Vignette.astro';
+
+interface Props {
+  title: string;
+  intro?: string;
+  vignette: 'flower' | 'bell' | 'train' | 'canoe' | 'letter';
+}
+const { title, intro, vignette } = Astro.props;
+---
+
+<header class="page-head" data-reveal>
+  <Vignette name={vignette} />
+  <h1 class="page-title">{title}</h1>
+  {intro && <p class="page-intro">{intro}</p>}
+</header>

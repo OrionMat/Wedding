@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import RuleList from '../components/RuleList.astro';
+import { type Lang } from '../i18n';
+import { t } from '../content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = t(lang).travel;
+---
+
+<Base lang={lang} title={c.title}>
+  <div class="page">
+    <div class="column">
+      <PageHead title={c.title} vignette="train" />
+
+      <section class="section" data-reveal>
+        <p class="eyebrow">{c.gettingEyebrow}</p>
+        <h2 class="section-title">{c.gettingTitle}</h2>
+        <p class="muted">{c.gettingIntro}</p>
+        {
+          c.getting.map((g) => (
+            <>
+              <h3 class="group-label">{g.label}</h3>
+              <RuleList entries={g.entries} />
+            </>
+          ))
+        }
+      </section>
+
+      <section class="section" data-reveal>
+        <p class="eyebrow">{c.stayEyebrow}</p>
+        <h2 class="section-title">{c.stayTitle}</h2>
+        <p class="muted">{c.stayIntro}</p>
+        {
+          c.stay.map((g) => (
+            <>
+              <h3 class="group-label">{g.label}</h3>
+              <RuleList entries={g.entries} />
+            </>
+          ))
+        }
+        <p class="muted outro">{c.stayOutro}</p>
+      </section>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .outro {
+    margin-top: 32px;
+    font-size: 15px;
+  }
+</style>

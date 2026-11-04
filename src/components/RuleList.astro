@@ -1,0 +1,26 @@
+---
+import type { Entry } from '../content';
+
+interface Props {
+  entries: Entry[];
+  linkLabel?: string;
+}
+const { entries, linkLabel } = Astro.props;
+---
+
+<ul class="rule-list">
+  {
+    entries.map((e) => (
+      <li>
+        {e.meta && <span class="meta">{e.meta}</span>}
+        <span class="title">{e.title}</span>
+        {e.note && <span class="note">{e.note}</span>}
+        {e.link && linkLabel && (
+          <a class="text-link" href={e.link} target="_blank" rel="noopener">
+            {linkLabel} ↗
+          </a>
+        )}
+      </li>
+    ))
+  }
+</ul>
