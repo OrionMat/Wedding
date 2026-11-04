@@ -2,7 +2,7 @@ export const languages = { en: 'EN', fr: 'FR' } as const;
 export type Lang = keyof typeof languages;
 export const defaultLang: Lang = 'en';
 
-export const routes = ['', 'information', 'rsvp', 'timings', 'travel', 'things-to-do', 'faqs'] as const;
+export const routes = ['', 'information', 'rsvp', 'timings', 'travel', 'things-to-do'] as const;
 export type Route = (typeof routes)[number];
 
 /** Build a URL for a route in a given language. */

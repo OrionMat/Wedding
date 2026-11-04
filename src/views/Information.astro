@@ -1,9 +1,10 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import FaqList from '../components/FaqList.astro';
 import recatadou from '../assets/illus-recatadou.png';
 import church from '../assets/illus-church-street.jpg';
-import { href, type Lang } from '../i18n';
+import { type Lang } from '../i18n';
 import { t } from '../content';
 import { MAPS } from '../config';
 
@@ -33,31 +34,29 @@ const c = all.info;
     </p>
   </section>
 
-  <section class="story" aria-labelledby="story-title">
-    <div class="column story-text" data-reveal>
-      <p class="eyebrow">{c.storyEyebrow}</p>
-      <h2 class="section-title" id="story-title">{c.storyTitle}</h2>
-      {c.story.map((p) => <p class="muted">{p}</p>)}
-    </div>
-  </section>
-
   <section class="page venues" aria-labelledby="venues-title">
     <div class="column">
       <header class="venues-head" data-reveal>
         <p class="eyebrow">{c.venuesEyebrow}</p>
         <h2 class="section-title" id="venues-title">{c.venuesTitle}</h2>
       </header>
+      <Image
+        class="venues-illus"
+        src={church}
+        alt="Watercolour of stone steps climbing to a church spire"
+        widths={[640, 1024]}
+        sizes="(max-width: 640px) 90vw, 640px"
+        data-reveal
+      />
     </div>
     <div class="venue-grid">
       <article class="venue" data-reveal>
-        <Image src={church} alt="Watercolour of stone steps climbing to a church spire" widths={[440, 880]} sizes="(max-width: 760px) 90vw, 440px" />
         <p class="eyebrow">{c.ceremony.label}</p>
         <h3>{c.ceremony.name}</h3>
         <p class="muted">{c.ceremony.town}</p>
         <a class="text-link" href={MAPS.ceremony} target="_blank" rel="noopener">{c.directions} ↗</a>
       </article>
       <article class="venue" data-reveal>
-        <Image src={recatadou} alt="Watercolour of the Salle du Recatadou above the gorge" widths={[440, 880]} sizes="(max-width: 760px) 90vw, 440px" />
         <p class="eyebrow">{c.reception.label}</p>
         <h3>{c.reception.name}</h3>
         <p class="muted">{c.reception.town}</p>
@@ -66,10 +65,16 @@ const c = all.info;
     </div>
   </section>
 
-  <section class="cta" data-reveal>
-    <h2 class="section-title">{c.ctaTitle}</h2>
-    <p class="muted">{c.ctaText}</p>
-    <a class="btn" href={href(lang, 'rsvp')}>{c.ctaButton}</a>
+  <section class="page faq-section" aria-labelledby="faqs-title">
+    <div class="column">
+      <header class="venues-head" data-reveal>
+        <h2 class="section-title" id="faqs-title">{all.faqs.title}</h2>
+        <p class="muted">{all.faqs.intro}</p>
+      </header>
+      <div data-reveal>
+        <FaqList items={all.faqs.items} />
+      </div>
+    </div>
   </section>
 </Base>
 
@@ -113,37 +118,28 @@ const c = all.info;
     }
   }
 
-  .story {
-    padding: 64px 0 0;
-    border-top: 1px solid var(--color-rule);
-  }
-  .story-text {
-    padding: 0 var(--gutter);
-    text-align: center;
-  }
-
   .venues {
+    border-top: 1px solid var(--color-rule);
     padding-top: 96px;
+    padding-bottom: 0;
   }
   .venues-head {
     text-align: center;
-    margin-bottom: 48px;
+    margin-bottom: 40px;
+  }
+  .venues-illus {
+    width: 100%;
+    margin: 0 auto 48px;
   }
   .venue-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-    gap: 56px 48px;
-    max-width: 960px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: 48px;
+    max-width: 760px;
     margin: 0 auto;
   }
   .venue {
     text-align: center;
-  }
-  .venue img {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: contain;
-    margin-bottom: 20px;
   }
   .venue h3 {
     font-size: 1.7rem;
@@ -153,11 +149,7 @@ const c = all.info;
     margin-bottom: 10px;
   }
 
-  .cta {
-    text-align: center;
-    padding: 24px var(--gutter) 112px;
-  }
-  .cta .btn {
-    margin-top: 12px;
+  .faq-section {
+    padding-top: 112px;
   }
 </style>

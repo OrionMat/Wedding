@@ -1,39 +1,28 @@
 ---
-import Base from '../layouts/Base.astro';
-import PageHead from '../components/PageHead.astro';
-import { type Lang } from '../i18n';
-import { t } from '../content';
-
 interface Props {
-  lang: Lang;
+  items: { q: string; a: string }[];
 }
-const { lang } = Astro.props;
-const c = t(lang).faqs;
+const { items } = Astro.props;
 ---
 
-<Base lang={lang} title={c.title}>
-  <div class="page">
-    <div class="column">
-      <PageHead title={c.title} intro={c.intro} vignette="letter" />
-
-      <div class="faqs" data-reveal>
-        {
-          c.items.map((item) => (
-            <details>
-              <summary>
-                <span>{item.q}</span>
-                <span class="icon" aria-hidden="true" />
-              </summary>
-              <p class="muted">{item.a}</p>
-            </details>
-          ))
-        }
-      </div>
-    </div>
-  </div>
-</Base>
+<div class="faqs">
+  {
+    items.map((item) => (
+      <details>
+        <summary>
+          <span>{item.q}</span>
+          <span class="icon" aria-hidden="true" />
+        </summary>
+        <p class="muted">{item.a}</p>
+      </details>
+    ))
+  }
+</div>
 
 <style>
+  .faqs {
+    text-align: left;
+  }
   details {
     border-top: 1px solid var(--color-rule);
   }

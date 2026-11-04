@@ -22,7 +22,6 @@ const en = {
       timings: 'Timings',
       travel: 'Travel & Accommodation',
       'things-to-do': 'Things to Do in the Ardèche',
-      faqs: 'FAQs',
     },
   },
   home: {
@@ -34,21 +33,11 @@ const en = {
     title: 'Information',
     date: 'Saturday 3rd July 2027',
     place: 'Labeaume · Ardèche',
-    storyEyebrow: 'Save the date',
-    storyTitle: 'A short, sweet decade',
-    story: [
-      'It’s been a short, sweet decade since Josephine mistook a guy at her university bar for being French. Then, a mere year after that, she mistook him again for his housemate.',
-      'Now, after graduating, moving countries and moving in together, we’re getting married, beside the beautiful village where Josephine spent her summers growing up.',
-      'If you can’t make it: hakuna matata, just let us know. Merci!',
-    ],
     venuesEyebrow: 'The day',
     venuesTitle: 'Where we’ll be',
     ceremony: { label: 'Ceremony', name: 'Église Notre-Dame des Pommiers', town: 'Largentière' },
     reception: { label: 'Reception', name: 'Salle du Recatadou', town: 'Labeaume' },
     directions: 'Directions',
-    ctaTitle: 'Will you join us?',
-    ctaText: 'Please let us know by 1st March 2027.', // [CONFIRM] RSVP deadline
-    ctaButton: 'RSVP',
   },
   rsvp: {
     title: 'RSVP',
@@ -76,7 +65,6 @@ const en = {
   },
   timings: {
     title: 'Timings',
-    intro: 'A rough plan for the day. Exact times to follow.', // [CONFIRM] all times
     items: [
       { time: '14:00', title: 'Ceremony', place: 'Église Notre-Dame des Pommiers, Largentière' },
       { time: '15:00', title: 'Head to Labeaume', place: 'About 25 minutes by car' },
@@ -173,7 +161,6 @@ const fr: Content = {
       timings: 'Programme',
       travel: 'Voyage & Hébergement',
       'things-to-do': 'À faire en Ardèche',
-      faqs: 'FAQ',
     },
   },
   home: {
@@ -184,21 +171,11 @@ const fr: Content = {
     title: 'Informations',
     date: 'Samedi 3 juillet 2027',
     place: 'Labeaume · Ardèche',
-    storyEyebrow: 'Réservez la date',
-    storyTitle: 'Une courte et douce décennie',
-    story: [
-      'Cela fait une courte et douce décennie que Josephine a pris un garçon, au bar de son université, pour un Français. Puis, à peine un an plus tard, elle l’a pris pour son colocataire.',
-      'Aujourd’hui, après les diplômes, les déménagements d’un pays à l’autre et la vie à deux, nous nous marions, près du beau village où Josephine a passé tous ses étés d’enfance.',
-      'Si vous ne pouvez pas venir : hakuna matata, dites-le-nous simplement. Merci !',
-    ],
     venuesEyebrow: 'Le jour J',
     venuesTitle: 'Où nous trouver',
     ceremony: { label: 'Cérémonie', name: 'Église Notre-Dame des Pommiers', town: 'Largentière' },
     reception: { label: 'Réception', name: 'Salle du Recatadou', town: 'Labeaume' },
     directions: 'Itinéraire',
-    ctaTitle: 'Serez-vous des nôtres ?',
-    ctaText: 'Merci de nous répondre avant le 1er mars 2027.',
-    ctaButton: 'RSVP',
   },
   rsvp: {
     title: 'RSVP',
@@ -226,7 +203,6 @@ const fr: Content = {
   },
   timings: {
     title: 'Programme',
-    intro: 'Le déroulé approximatif de la journée. Horaires précis à venir.',
     items: [
       { time: '14h00', title: 'Cérémonie', place: 'Église Notre-Dame des Pommiers, Largentière' },
       { time: '15h00', title: 'Route vers Labeaume', place: 'Environ 25 minutes en voiture' },

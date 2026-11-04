@@ -54,8 +54,6 @@ const og = await getImage({ src: ogSource, width: 900, format: 'jpg' });
         {c.nav.menu}
       </button>
 
-      <a class="wordmark" href={href(lang)}>{c.names}</a>
-
       <nav class="langs" aria-label="Language">
         {
           Object.entries(languages).map(([code, label]) => (
@@ -178,7 +176,7 @@ const og = await getImage({ src: ogSource, width: 900, format: 'jpg' });
     inset: 0 0 auto 0;
     z-index: 40;
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: 1fr 1fr;
     align-items: center;
     padding: 16px var(--gutter);
     pointer-events: none;
@@ -203,18 +201,6 @@ const og = await getImage({ src: ogSource, width: 900, format: 'jpg' });
     box-shadow: 0 4px 18px rgba(44, 44, 44, 0.16);
   }
 
-  .wordmark {
-    font-family: var(--font-display);
-    font-size: 20px;
-    line-height: 1;
-    white-space: nowrap;
-    text-decoration: none;
-    color: var(--color-ink);
-    padding: 9px 16px;
-    border-radius: var(--radius-pill);
-    background: color-mix(in srgb, var(--color-bg) 80%, transparent);
-    backdrop-filter: blur(6px);
-  }
 
   .langs {
     justify-self: end;
@@ -289,16 +275,4 @@ const og = await getImage({ src: ogSource, width: 900, format: 'jpg' });
     overflow: hidden;
   }
 
-  @media (max-width: 480px) {
-    .topbar {
-      gap: 8px;
-    }
-    .wordmark {
-      font-size: 15px;
-      padding: 8px 10px;
-    }
-    .pill {
-      padding: 0 13px;
-    }
-  }
 </style>

@@ -1,7 +1,7 @@
 # Orion and Josephine: wedding website
 
 Static [Astro](https://astro.build) site for our wedding on **Saturday 3rd July 2027** in Labeaume, Ardèche.
-Pages: Home (the save-the-date letter), Information, RSVP, Timings, Travel & Accommodation, Things to Do, FAQs, in English (`/`) and French (`/fr/`).
+Pages: Home (the save-the-date letter), Information (including FAQs), RSVP, Timings, Travel & Accommodation, Things to Do, in English (`/`) and French (`/fr/`).
 
 ## Run it locally
 
