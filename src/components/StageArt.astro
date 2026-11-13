@@ -1,12 +1,12 @@
 ---
 // The illustration for one schedule stage, with a small looping animation.
-// 'church' and 'reception' use the real watercolours, 'car' the convoy watercolour; the others are hand-drawn
+// 'church', 'car', 'reception' (a dawa) and 'dinner' use watercolours; the others are hand-drawn
 // placeholders in the same washed style until matching watercolours are made
 // (see CONTENT_TODO.md). Animations pause on stages that aren't showing and are
 // switched off for people who prefer reduced motion.
 import { Image } from 'astro:assets';
 import church from '../assets/illus-church.png';
-import recatadou from '../assets/illus-recatadou.png';
+import dawa from '../assets/illus-dawa.png';
 import cars from '../assets/illus-cars.png';
 import dinner from '../assets/illus-dinner.png';
 // the convoy stands still while its wheels whirl: a few spokes drawn over each
@@ -25,11 +25,21 @@ const { art } = Astro.props;
 const ink = '#5a5a52';
 // the tips of the three tall candles on the dinner table, in the picture's pixels (1785 × 512)
 const candles = [[562, 30], [1008, 6], [1424, 28]];
-// confetti over the reception, where the party is: across (%), delay (s), fall time (s), size (px)
-const confetti = [
-  [6, 0, 5.5, 9], [15, 1.6, 6.2, 7], [24, 0.7, 5, 10], [34, 2.4, 6.6, 8], [43, 0.2, 5.8, 9],
-  [53, 1.9, 6, 7], [62, 0.9, 5.2, 10], [71, 2.8, 6.4, 8], [80, 1.2, 5.6, 9], [90, 0.4, 6.1, 7],
+// fizz in a dawa and a spritz raised together: bubbles rising through each drink to its
+// surface. Across, start height and the surface they rise to (in the picture's pixels,
+// 1218 × 1199), radius, delay (s), rise time (s)
+const bubbles = [
+  // the dawa, on the left
+  [100, 720, 405, 14, 0, 3.4], [180, 730, 410, 10, 1.3, 3], [260, 735, 415, 16, 2.2, 3.6],
+  [330, 730, 422, 12, 0.6, 3.1], [420, 725, 430, 14, 1.9, 3.4], [480, 690, 435, 9, 2.7, 2.7],
+  [150, 650, 408, 9, 3.1, 2.6],
+  // the spritz, on the right: finer and livelier
+  [700, 620, 245, 9, 0.2, 2.8], [760, 630, 240, 8, 1.1, 2.6], [820, 630, 235, 10, 1.8, 3],
+  [880, 620, 230, 8, 0.7, 2.5], [650, 560, 250, 8, 2.4, 2.6], [960, 580, 225, 8, 1.5, 2.5],
+  [1040, 500, 218, 7, 2.9, 2.2], [790, 590, 238, 7, 3.3, 2.4], [610, 480, 252, 7, 0.4, 2.1],
 ];
+// glints of light catching the salt on the dawa's rim and the spritz glass's lip
+const glints = [[90, 275, 0], [545, 350, 1.4], [560, 110, 0.6], [940, 20, 2.1]];
 const wash = `wash-${art}`;
 // leaves dropping from the tree on the left of the church picture:
 // start across (% of picture), start down (%), delay (s), fall time (s), size (px),
@@ -106,13 +116,16 @@ const bulbs = [
 
   {
     art === 'reception' && (
-      <div class="pic-wrap" style={`aspect-ratio: ${recatadou.width} / ${recatadou.height}`}>
-        <Image src={recatadou} alt="" widths={[480, 960]} sizes="(max-width: 700px) 70vw, 340px" class="picture" />
-        <div class="confetti">
-          {confetti.map(([x, d, t, sz]) => (
-            <i style={`--x:${x}%;--d:${d}s;--t:${t}s;--s:${sz}px`} />
+      <div class="pic-wrap dawa" style={`aspect-ratio: ${dawa.width} / ${dawa.height}`}>
+        <Image src={dawa} alt="" widths={[320, 640]} sizes="(max-width: 700px) 70vw, 260px" class="picture" />
+        <svg class="fizz" viewBox={`0 0 ${dawa.width} ${dawa.height}`} aria-hidden="true">
+          {bubbles.map(([x, y, top, r, d, t]) => (
+            <circle class="bubble" cx={x} cy={y} r={r} style={`--d:${d}s;--t:${t}s;--rise:${y - top}px`} />
           ))}
-        </div>
+          {glints.map(([x, y, d]) => (
+            <path class="glint" style={`--d:${d}s;transform-origin:${x}px ${y}px`} d={`M${x} ${y - 22} L ${x + 5} ${y - 5} L ${x + 22} ${y} L ${x + 5} ${y + 5} L ${x} ${y + 22} L ${x - 5} ${y + 5} L ${x - 22} ${y} L ${x - 5} ${y - 5} Z`} />
+          ))}
+        </svg>
       </div>
     )
   }
@@ -276,56 +289,59 @@ const bulbs = [
     }
   }
 
-  /* reception: confetti in the flag colours, falling over the party */
-  .confetti {
+  /* reception: a dawa and a spritz clinking, their drinks fizzing, bubbles rising to the top and the salt
+     on the rim catching the light now and then */
+  .fizz {
     position: absolute;
     inset: 0;
-    container-type: size;
-    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
     pointer-events: none;
   }
-  .confetti i {
-    position: absolute;
-    top: -12px;
-    left: var(--x);
-    width: var(--s);
-    height: calc(var(--s) * 0.7);
-    background: var(--c, #b3472f);
+  .bubble {
+    fill: rgba(255, 255, 255, 0.55);
+    stroke: rgba(255, 255, 255, 0.95);
+    stroke-width: 4;
     opacity: 0;
-    animation: confetti-fall var(--t) linear var(--d) infinite;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: bubble-rise var(--t) cubic-bezier(0.4, 0, 0.8, 1) var(--d) infinite;
   }
-  :global([data-flag='en']) .confetti i:nth-child(3n + 1) {
-    --c: var(--ke-black);
-  }
-  :global([data-flag='en']) .confetti i:nth-child(3n + 2) {
-    --c: var(--ke-red);
-  }
-  :global([data-flag='en']) .confetti i:nth-child(3n) {
-    --c: var(--ke-green);
-  }
-  :global([data-flag='fr']) .confetti i:nth-child(3n + 1) {
-    --c: var(--fr-blue-ink);
-  }
-  :global([data-flag='fr']) .confetti i:nth-child(3n + 2) {
-    --c: var(--fr-red);
-  }
-  :global([data-flag='fr']) .confetti i:nth-child(3n) {
-    --c: var(--fr-blue);
-  }
-  @keyframes confetti-fall {
+  @keyframes bubble-rise {
     0% {
-      transform: translateY(0) rotate(0deg);
+      transform: translate(0, 0) scale(0.6);
       opacity: 0;
     }
-    8% {
-      opacity: 0.9;
+    15% {
+      opacity: 0.95;
+    }
+    50% {
+      transform: translate(6px, calc(var(--rise) * -0.5)) scale(0.9);
     }
     85% {
       opacity: 0.9;
     }
     100% {
-      transform: translateY(calc(100cqh + 12px)) rotate(540deg);
+      transform: translate(-4px, calc(var(--rise) * -1)) scale(1.1);
       opacity: 0;
+    }
+  }
+  .glint {
+    fill: #fff;
+    opacity: 0;
+    animation: glint 3.2s ease-in-out var(--d) infinite;
+  }
+  @keyframes glint {
+    0%,
+    70%,
+    100% {
+      opacity: 0;
+      transform: scale(0.3) rotate(0deg);
+    }
+    82% {
+      opacity: 1;
+      transform: scale(1) rotate(45deg);
     }
   }
 
