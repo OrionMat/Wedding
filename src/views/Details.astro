@@ -4,6 +4,7 @@ import Base from '../layouts/Base.astro';
 import FaqList from '../components/FaqList.astro';
 import Arrow from '../components/Arrow.astro';
 import RuleList from '../components/RuleList.astro';
+import ScheduleCarousel from '../components/ScheduleCarousel.astro';
 import recatadou from '../assets/illus-recatadou.png';
 import church from '../assets/illus-church-street.jpg';
 import denimTile from '../assets/denim-tile.jpg';
@@ -26,8 +27,13 @@ const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
        tucked over its top edge, coloured like the home buttons -->
   <h1 class="sr-only">{c.title}</h1>
   <div class="desk" style={`--denim: url(${denim.src})`} data-flag={lang}>
-  <section class="sheet" id="venues" style="--tilt: 0.5deg" aria-labelledby="venues-title">
-    <h2 class="label label--1" id="venues-title" style="--r: -3deg"><span>{c.venuesTitle}</span></h2>
+  <section class="sheet" id="schedule" style="--tilt: 0.5deg" aria-labelledby="schedule-title">
+    <h2 class="label label--1" id="schedule-title" style="--r: -3deg"><span>{all.timings.title}</span></h2>
+    <ScheduleCarousel lang={lang} />
+  </section>
+
+  <section class="sheet" id="venues" style="--tilt: -0.4deg" aria-labelledby="venues-title">
+    <h2 class="label label--2" id="venues-title" style="--r: 2deg"><span>{c.venuesTitle}</span></h2>
 
     <!-- each venue's watercolour, with its details written on as a hand-drawn label whose
          arrow points at the building (after the arrow labels on the old Wix site) -->
@@ -45,8 +51,6 @@ const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
           alt="Watercolour of the stone steps in L’Argentiere climbing to the church spire, past Josephine’s grandparents’ house"
           widths={[640, 1024]}
           sizes="(max-width: 820px) 90vw, 720px"
-          loading="eager"
-          fetchpriority="high"
         />
         <p class="note note--grandparents">
           <Arrow transform="rotate(180deg)" />
@@ -72,27 +76,6 @@ const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
         />
       </figure>
     </article>
-  </section>
-
-  <section class="sheet" id="schedule" style="--tilt: -0.4deg" aria-labelledby="schedule-title">
-    <h2 class="label label--2" id="schedule-title" style="--r: 2deg"><span>{all.timings.title}</span></h2>
-    <div class="column">
-      <ol class="timeline">
-        {
-          all.timings.items.map((item) => (
-            <li data-reveal>
-              <span class="time">{item.time}</span>
-              <span class="dot" aria-hidden="true" />
-              <div>
-                <h3>{item.title}</h3>
-                <p class="muted">{item.place}</p>
-              </div>
-            </li>
-          ))
-        }
-      </ol>
-      <p class="timeline-note muted" data-reveal>{all.timings.transportNote}</p>
-    </div>
   </section>
 
   <section class="sheet" id="travel" style="--tilt: 0.5deg" aria-labelledby="travel-title">
@@ -343,61 +326,6 @@ const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
   .venue--ceremony {
     /* clear the grandparents label hanging below the picture */
     padding-bottom: 56px;
-  }
-
-  .timeline {
-    list-style: none;
-    margin: 0 auto;
-    padding: 0;
-    max-width: 480px;
-    position: relative;
-  }
-  .timeline::before {
-    content: '';
-    position: absolute;
-    left: 88px;
-    top: 10px;
-    bottom: 10px;
-    width: 1px;
-    background: var(--color-rule);
-  }
-  .timeline li {
-    display: grid;
-    grid-template-columns: 72px 32px 1fr;
-    align-items: start;
-  }
-  .timeline li + li {
-    margin-top: 32px;
-  }
-  .time {
-    font-family: var(--font-accent);
-    font-style: italic;
-    font-size: 1.15rem;
-    text-align: right;
-    padding-top: 2px;
-  }
-  .dot {
-    width: 9px;
-    height: 9px;
-    margin: 10px auto 0;
-    border-radius: 50%;
-    background: #fff;
-    border: 1px solid var(--color-ink);
-    position: relative;
-    z-index: 1;
-  }
-  .timeline h3 {
-    font-size: 1.35rem;
-    line-height: 1.4;
-  }
-  .timeline p {
-    margin: 2px 0 0;
-    font-size: 15px;
-  }
-  .timeline-note {
-    text-align: center;
-    margin: 48px 0 0;
-    font-style: italic;
   }
 
   .sub + .sub {

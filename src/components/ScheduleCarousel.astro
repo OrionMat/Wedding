@@ -1,0 +1,332 @@
+---
+// The day as a side-scrolling strip of stages, after the schedule on finn-brinn.co.uk:
+// one stage centred at a time with its neighbours peeking in, ‹ › arrows, dots to
+// jump between stages, swipe on phones and the arrow keys on a keyboard.
+import StageArt from './StageArt.astro';
+import { type Lang } from '../i18n';
+import { t } from '../content';
+import { MAPS } from '../config';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const all = t(lang);
+const c = all.timings;
+const total = c.items.length;
+---
+
+<div class="schedule" data-schedule>
+  <ol class="track" tabindex="0" aria-label={c.title}>
+    {
+      c.items.map((stage, i) => (
+        <li class:list={['stage', { 'is-active': i === 0 }]} aria-roledescription="slide" aria-label={`${i + 1} ${c.of} ${total}`}>
+          <p class="time">{stage.time}</p>
+          {stage.until && (
+            <p class="until">
+              {c.until} {stage.until}
+            </p>
+          )}
+          <h3>{stage.title}</h3>
+          {stage.place && <p class="place">{stage.place}</p>}
+          {stage.note && <p class="note-line">{stage.note}</p>}
+          {stage.map && (
+            <a class="directions" href={MAPS[stage.map]} target="_blank" rel="noopener">
+              {all.info.directions}
+            </a>
+          )}
+          <StageArt art={stage.art} />
+        </li>
+      ))
+    }
+  </ol>
+
+  <div class="controls">
+    <button class="arrow" type="button" data-prev aria-label={c.prev} disabled>‹</button>
+    <div class="dots">
+      {
+        c.items.map((stage, i) => (
+          <button class="dot" type="button" data-dot={i} aria-label={`${stage.time} · ${stage.title}`} aria-current={i === 0 ? 'true' : undefined} />
+        ))
+      }
+    </div>
+    <button class="arrow" type="button" data-next aria-label={c.next}>›</button>
+  </div>
+</div>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>('[data-schedule]')) {
+    const track = root.querySelector<HTMLElement>('.track')!;
+    const stages = Array.from(track.querySelectorAll<HTMLElement>('.stage'));
+    const dots = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-dot]'));
+    const prev = root.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const next = root.querySelector<HTMLButtonElement>('[data-next]')!;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // the stage we're on, or heading to while the strip slides
+    let target = 0;
+
+    // scroll position that puts a stage in the middle of the strip
+    const centreOf = (s: HTMLElement) => {
+      const left = s.getBoundingClientRect().left - track.getBoundingClientRect().left + track.scrollLeft;
+      return Math.max(0, Math.min(track.scrollWidth - track.clientWidth, left - (track.clientWidth - s.offsetWidth) / 2));
+    };
+
+    const show = (i: number) => {
+      stages.forEach((s, n) => s.classList.toggle('is-active', n === i));
+      dots.forEach((d, n) => (n === i ? d.setAttribute('aria-current', 'true') : d.removeAttribute('aria-current')));
+      prev.disabled = i === 0;
+      next.disabled = i === stages.length - 1;
+    };
+
+    // glide the strip to a position; snapping is paused meanwhile so it can't tug the strip elsewhere
+    let glide = 0;
+    let gliding = false;
+    const scrollToX = (x: number, instant: boolean) => {
+      cancelAnimationFrame(glide);
+      const from = track.scrollLeft;
+      const dist = x - from;
+      if (instant || reduced || Math.abs(dist) < 1) {
+        track.scrollLeft = x;
+        return;
+      }
+      gliding = true;
+      track.style.scrollSnapType = 'none';
+      const start = performance.now();
+      const duration = Math.min(700, 320 + Math.abs(dist) * 0.25);
+      const step = (now: number) => {
+        const p = Math.min(1, (now - start) / duration);
+        const ease = 1 - Math.pow(1 - p, 3);
+        track.scrollLeft = from + dist * ease;
+        if (p < 1) glide = requestAnimationFrame(step);
+        else {
+          track.style.scrollSnapType = '';
+          gliding = false;
+        }
+      };
+      glide = requestAnimationFrame(step);
+    };
+
+    const go = (i: number, instant = false) => {
+      target = Math.max(0, Math.min(stages.length - 1, i));
+      show(target);
+      scrollToX(centreOf(stages[target]), instant);
+    };
+
+    // when someone swipes or scrolls the strip themselves, follow whichever stage is nearest the middle
+    const nearest = () => {
+      let best = 0;
+      let bestDist = Infinity;
+      stages.forEach((s, i) => {
+        const d = Math.abs(centreOf(s) - track.scrollLeft);
+        if (d < bestDist) {
+          bestDist = d;
+          best = i;
+        }
+      });
+      return best;
+    };
+    let settle = 0;
+    track.addEventListener('scroll', () => {
+      if (gliding) return;
+      clearTimeout(settle);
+      settle = window.setTimeout(() => {
+        target = nearest();
+        show(target);
+      }, 120);
+    });
+
+    prev.addEventListener('click', () => go(target - 1));
+    next.addEventListener('click', () => go(target + 1));
+    dots.forEach((d, i) => d.addEventListener('click', () => go(i)));
+    // a click on a peeking neighbour brings it to the middle
+    stages.forEach((s, i) =>
+      s.addEventListener('click', (e) => {
+        if (i !== target && !(e.target as Element).closest('a')) go(i);
+      }),
+    );
+    track.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        go(target + 1);
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        go(target - 1);
+      }
+    });
+    window.addEventListener('resize', () => go(target, true));
+    go(0, true);
+  }
+</script>
+
+<style>
+  .track {
+    /* stage width, as a share of the strip; the rest is split between the
+       neighbours peeking in on either side */
+    --stage: 76%;
+    display: flex;
+    gap: 3%;
+    padding: 8px 0 4px;
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    outline-offset: -6px;
+  }
+  .track::-webkit-scrollbar {
+    display: none;
+  }
+  /* spacers either side, so the first and last stages can sit in the middle
+     (scroll containers don't reliably count end padding) */
+  .track::before,
+  .track::after {
+    content: '';
+    flex: 0 0 calc((100% - var(--stage)) / 2 - 3%);
+  }
+
+  .stage {
+    flex: 0 0 var(--stage);
+    scroll-snap-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    opacity: 0.28;
+    transform: scale(0.94);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    cursor: pointer;
+  }
+  .stage.is-active {
+    opacity: 1;
+    transform: none;
+    cursor: auto;
+  }
+  /* only the stage you're looking at is animated */
+  .stage:not(.is-active) :global(*) {
+    animation-play-state: paused !important;
+  }
+
+  .stage p {
+    margin: 0;
+  }
+  .time {
+    font-family: var(--font-headline);
+    font-size: clamp(2.6rem, 8vw, 3.6rem);
+    line-height: 1;
+    color: var(--color-headline);
+  }
+  .until {
+    margin-top: 4px !important;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  .stage h3 {
+    margin: 12px 0 6px;
+    font-size: clamp(1.5rem, 4.4vw, 2rem);
+    line-height: 1.1;
+  }
+  .place {
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-headline);
+  }
+  .note-line {
+    max-width: 30em;
+    margin-top: 8px !important;
+    color: var(--color-ink-soft);
+  }
+  .directions {
+    margin-top: 6px;
+    font-family: var(--font-headline);
+    color: #1a5fb4;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .stage :global(.stage-art) {
+    margin-top: 22px;
+    width: 100%;
+  }
+
+  /* ‹ ••••• › under the strip */
+  .controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    margin-top: 26px;
+  }
+  .arrow {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    padding: 0 0 4px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(75, 54, 24, 0.08);
+    color: var(--color-headline);
+    font: 400 28px/1 var(--font-headline);
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .arrow:hover:not(:disabled) {
+    background: rgba(75, 54, 24, 0.16);
+  }
+  .arrow:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+  .dots {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  /* little diamond-cut paper chips, cycling through the flag colours */
+  .dot {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border: 0;
+    background: var(--dot, var(--color-ink-muted));
+    transform: rotate(45deg);
+    opacity: 0.4;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .dot[aria-current] {
+    opacity: 1;
+    transform: rotate(45deg) scale(1.45);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  }
+  :global([data-flag='en']) .dot:nth-child(3n + 1) {
+    --dot: var(--ke-black);
+  }
+  :global([data-flag='en']) .dot:nth-child(3n + 2) {
+    --dot: var(--ke-red);
+  }
+  :global([data-flag='en']) .dot:nth-child(3n) {
+    --dot: var(--ke-green);
+  }
+  :global([data-flag='fr']) .dot:nth-child(3n + 1) {
+    --dot: var(--fr-blue-ink);
+  }
+  :global([data-flag='fr']) .dot:nth-child(3n + 2) {
+    --dot: #cfc8b4;
+  }
+  :global([data-flag='fr']) .dot:nth-child(3n) {
+    --dot: var(--fr-red);
+  }
+
+  @media (max-width: 600px) {
+    .track {
+      --stage: 86%;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stage :global(*) {
+      animation: none !important;
+    }
+  }
+</style>

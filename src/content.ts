@@ -6,6 +6,16 @@ import type { Lang } from './i18n';
 
 export type Entry = { meta?: string; title: string; note?: string; link?: string };
 export type Group = { label: string; entries: Entry[] };
+export type StageArt = 'church' | 'car' | 'reception' | 'dinner' | 'dance' | 'stars';
+export type Stage = {
+  time: string;
+  until?: string;
+  title: string;
+  place?: string;
+  map?: 'ceremony' | 'reception';
+  note?: string;
+  art: StageArt;
+};
 
 const en = {
   names: 'Orion & Josephine',
@@ -72,16 +82,20 @@ const en = {
   },
   timings: {
     title: 'Schedule',
+    // One stage per slide in the schedule carousel. `art` picks the illustration;
+    // `map` ('ceremony' | 'reception') adds a Directions link. [CONFIRM] all times and notes
     items: [
-      { time: '14:00', title: 'Ceremony', place: 'Église Notre-Dame des Pommiers, L’Argentiere' },
-      { time: '15:00', title: 'Head to Labeaume', place: 'About 25 minutes by car' },
-      { time: '16:00', title: 'Drinks & canapés', place: 'Salle du Recatadou' },
-      { time: '19:00', title: 'Dinner', place: 'Salle du Recatadou' },
-      { time: '21:30', title: 'Dancing', place: 'Salle du Recatadou' },
-      { time: '01:00', title: 'Carriages', place: 'Back to bed' },
-    ],
-    transportNote:
-      'Getting between the church and the reception: details coming soon.', // [CONFIRM] shuttle?
+      { time: '14:00', until: '15:00', title: 'We say “I do”', place: 'Église Notre-Dame des Pommiers', map: 'ceremony', note: 'Please arrive by quarter to two.', art: 'church' },
+      { time: '15:00', until: '16:00', title: 'On the road', note: 'About 25 minutes by car to Labeaume. Details on getting there coming soon.', art: 'car' },
+      { time: '16:00', until: '19:00', title: 'Let’s raise a glass', place: 'Salle du Recatadou', map: 'reception', note: 'Drinks and canapés in the sunshine.', art: 'reception' },
+      { time: '19:00', until: '21:30', title: 'Dinner is served', place: 'Salle du Recatadou', note: 'A long table, good food and a few short speeches.', art: 'dinner' },
+      { time: '21:30', until: '01:00', title: 'To the dance floor', place: 'Salle du Recatadou', note: 'Bring your dancing shoes.', art: 'dance' },
+      { time: '01:00', title: 'And then… home', note: 'Carriages at one. We can’t wait to celebrate with you.', art: 'stars' },
+    ] as Stage[],
+    until: 'until',
+    prev: 'Previous',
+    next: 'Next',
+    of: 'of',
   },
   travel: {
     title: 'Travel & Accommodation',
@@ -208,14 +222,17 @@ const fr: Content = {
   timings: {
     title: 'Programme',
     items: [
-      { time: '14h00', title: 'Cérémonie', place: 'Église Notre-Dame des Pommiers, L’Argentiere' },
-      { time: '15h00', title: 'Route vers Labeaume', place: 'Environ 25 minutes en voiture' },
-      { time: '16h00', title: 'Vin d’honneur', place: 'Salle du Recatadou' },
-      { time: '19h00', title: 'Dîner', place: 'Salle du Recatadou' },
-      { time: '21h30', title: 'Soirée dansante', place: 'Salle du Recatadou' },
-      { time: '01h00', title: 'Fin de soirée', place: 'Au lit !' },
+      { time: '14h00', until: '15h00', title: 'Nous disons « oui »', place: 'Église Notre-Dame des Pommiers', map: 'ceremony', note: 'Merci d’arriver vers 13h45.', art: 'church' },
+      { time: '15h00', until: '16h00', title: 'En route', note: 'Environ 25 minutes en voiture jusqu’à Labeaume. Détails du trajet à venir.', art: 'car' },
+      { time: '16h00', until: '19h00', title: 'Levons nos verres', place: 'Salle du Recatadou', map: 'reception', note: 'Vin d’honneur et canapés au soleil.', art: 'reception' },
+      { time: '19h00', until: '21h30', title: 'À table !', place: 'Salle du Recatadou', note: 'Une longue tablée, un bon repas et quelques courts discours.', art: 'dinner' },
+      { time: '21h30', until: '01h00', title: 'Sur la piste de danse', place: 'Salle du Recatadou', note: 'Prévoyez vos chaussures de danse.', art: 'dance' },
+      { time: '01h00', title: 'Et puis… au lit', note: 'Fin de soirée à 1h. Nous avons hâte de faire la fête avec vous.', art: 'stars' },
     ],
-    transportNote: 'Pour aller de l’église à la réception : détails à venir.',
+    until: 'jusqu’à',
+    prev: 'Précédent',
+    next: 'Suivant',
+    of: 'sur',
   },
   travel: {
     title: 'Voyage & Hébergement',

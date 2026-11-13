@@ -4,7 +4,7 @@ Everything below is currently a placeholder or a guess on the live pages. Text l
 
 ## Must do before launch
 - [ ] **RSVP deadline**: not shown anywhere yet; add it to the RSVP popup intro (`rsvp.intro`) if you want one
-- [ ] **Timings**: all six times and events (`timings.items`)
+- [ ] **Schedule**: all six stages' times, titles and notes (`timings.items`), including the arrival time for the ceremony
 - [ ] **Transport between church and reception**: shuttle or drive yourselves? (`timings.transportNote`, FAQ)
 - [ ] **Hotels**: real recommendations by price band, plus any room blocks or discount codes (`travel.stay`)
 - [ ] **FAQ answers**: dress code, plus-ones, children, gift list (`faqs.items`, the Q&A at the bottom of the Details page)
@@ -17,8 +17,10 @@ Everything below is currently a placeholder or a guess on the live pages. Text l
 - [ ] Guests number field allows 1–6; adjust if needed (`src/components/RsvpDialog.astro`)
 
 ## Nice to have
-- [ ] Commission or generate watercolour vignettes to replace the placeholder line drawings:
-  bell tower/clock (Schedule), vintage train or car (Travel), envelope (Q&A and Registry)
+- [ ] Watercolour cut-outs (same style as the church and Recatadou) for the schedule stages that use placeholder drawings:
+  vintage car on a winding road (15:00), long table under a tree (19:00), festoon lights / record player (21:30), Labeaume under the stars (01:00).
+  Drop each into `src/assets/` and swap it in `src/components/StageArt.astro`; the animations can stay as they are
+- [ ] A watercolour envelope or similar for the Registry page (currently a placeholder line drawing)
 - [ ] Separate layers of the save-the-date collage (denim, envelope, letter, postcard, photo strip) for a layered/parallax version
 - [ ] Phase 2: personal RSVP links emailed to each guest (as on the reference site)
 - [ ] Any other languages besides EN/FR?
