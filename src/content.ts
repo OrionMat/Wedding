@@ -10,6 +10,8 @@ export type StageArt = 'church' | 'car' | 'reception' | 'dinner' | 'dance' | 'st
 export type Stage = {
   time: string;
   until?: string;
+  /** the time may still move: shows a small note under it */
+  provisional?: boolean;
   title: string;
   place?: string;
   map?: 'ceremony' | 'reception';
@@ -85,14 +87,16 @@ const en = {
     // One stage per slide in the schedule carousel. `art` picks the illustration;
     // `map` ('ceremony' | 'reception') adds a Directions link. [CONFIRM] all times and notes
     items: [
-      { time: '14:00', until: '15:00', title: 'We say “I do”', place: 'Église Notre-Dame des Pommiers', map: 'ceremony', note: 'Please arrive by quarter to two.', art: 'church' },
-      { time: '15:00', until: '16:00', title: 'On the road', note: 'About 25 minutes by car to Labeaume. Details on getting there coming soon.', art: 'car' },
-      { time: '16:00', until: '19:00', title: 'Let’s raise a glass', place: 'Salle du Recatadou', map: 'reception', note: 'Drinks and canapés in the sunshine.', art: 'reception' },
-      { time: '19:00', until: '21:30', title: 'Dinner is served', place: 'Salle du Recatadou', note: 'A long table, good food and a few short speeches.', art: 'dinner' },
-      { time: '21:30', until: '01:00', title: 'To the dance floor', place: 'Salle du Recatadou', note: 'Bring your dancing shoes.', art: 'dance' },
-      { time: '01:00', title: 'And then… home', note: 'Carriages at one. We can’t wait to celebrate with you.', art: 'stars' },
+      { time: '4.00 p.m.', provisional: true, title: 'We get married', place: 'Église Notre-Dame des Pommiers', map: 'ceremony', note: 'Please arrive at ten to four.', art: 'church' },
+      { time: '5.00 p.m.', title: 'On the road', note: 'About 25 minutes by car to Labeaume. Details on getting there coming soon.', art: 'car' },
+      { time: '5.30 p.m.', title: 'Let’s raise a glass', place: 'Salle du Recatadou', map: 'reception', note: 'Drinks and canapés in the sunshine.', art: 'reception' },
+      { time: '7.30 p.m.', title: 'Dinner is served', place: 'Salle du Recatadou', note: 'A long table, good food and a few short speeches.', art: 'dinner' },
+      { time: '10.00 p.m.', title: 'To the dance floor', place: 'Salle du Recatadou', note: 'Bring your dancing shoes.', art: 'dance' },
+      { time: '1.00 a.m.', title: 'And then… home', note: 'Carriages at one. We can’t wait to celebrate with you.', art: 'stars' },
     ] as Stage[],
     until: 'until',
+    provisional: 'Provisional: may change closer to the day',
+    map: 'Map',
     prev: 'Previous',
     next: 'Next',
     of: 'of',
@@ -222,14 +226,16 @@ const fr: Content = {
   timings: {
     title: 'Programme',
     items: [
-      { time: '14h00', until: '15h00', title: 'Nous disons « oui »', place: 'Église Notre-Dame des Pommiers', map: 'ceremony', note: 'Merci d’arriver vers 13h45.', art: 'church' },
-      { time: '15h00', until: '16h00', title: 'En route', note: 'Environ 25 minutes en voiture jusqu’à Labeaume. Détails du trajet à venir.', art: 'car' },
-      { time: '16h00', until: '19h00', title: 'Levons nos verres', place: 'Salle du Recatadou', map: 'reception', note: 'Vin d’honneur et canapés au soleil.', art: 'reception' },
-      { time: '19h00', until: '21h30', title: 'À table !', place: 'Salle du Recatadou', note: 'Une longue tablée, un bon repas et quelques courts discours.', art: 'dinner' },
-      { time: '21h30', until: '01h00', title: 'Sur la piste de danse', place: 'Salle du Recatadou', note: 'Prévoyez vos chaussures de danse.', art: 'dance' },
+      { time: '16h00', provisional: true, title: 'Nous nous marions', place: 'Église Notre-Dame des Pommiers', map: 'ceremony', note: 'Merci d’arriver à 15h50.', art: 'church' },
+      { time: '17h00', title: 'En route', note: 'Environ 25 minutes en voiture jusqu’à Labeaume. Détails du trajet à venir.', art: 'car' },
+      { time: '17h30', title: 'Levons nos verres', place: 'Salle du Recatadou', map: 'reception', note: 'Vin d’honneur et canapés au soleil.', art: 'reception' },
+      { time: '19h30', title: 'À table !', place: 'Salle du Recatadou', note: 'Une longue tablée, un bon repas et quelques courts discours.', art: 'dinner' },
+      { time: '22h00', title: 'Sur la piste de danse', place: 'Salle du Recatadou', note: 'Prévoyez vos chaussures de danse.', art: 'dance' },
       { time: '01h00', title: 'Et puis… au lit', note: 'Fin de soirée à 1h. Nous avons hâte de faire la fête avec vous.', art: 'stars' },
     ],
     until: 'jusqu’à',
+    provisional: 'Horaire provisoire, susceptible de changer',
+    map: 'Carte',
     prev: 'Précédent',
     next: 'Suivant',
     of: 'sur',
