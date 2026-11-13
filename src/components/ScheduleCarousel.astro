@@ -237,9 +237,14 @@ const total = c.items.length;
     text-decoration: underline;
     text-underline-offset: 3px;
   }
+  /* every stage's picture sits at the foot of the stage, on one shared line just
+     above the arrows, however much text the stage has */
   .stage :global(.stage-art) {
-    margin-top: 22px;
+    margin-top: auto;
     width: 100%;
+  }
+  .stage > :nth-last-child(2) {
+    margin-bottom: 22px !important;
   }
 
   /* ‹ ••••• › under the strip */
