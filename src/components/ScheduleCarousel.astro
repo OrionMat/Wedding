@@ -28,8 +28,8 @@ const total = c.items.length;
               {c.until} {stage.until}
             </p>
           )}
-          <h3>{stage.title}</h3>
           {stage.place && <p class="place">{stage.place}</p>}
+          <h3>{stage.title}</h3>
           {stage.note && !stage.provisional && <p class="note-line">{stage.note}</p>}
           {stage.map && (
             <a class="directions" href={MAPS[stage.map]} target="_blank" rel="noopener">
@@ -219,6 +219,7 @@ const total = c.items.length;
     line-height: 1.1;
   }
   .place {
+    margin-top: 14px !important;
     font-size: 13px;
     letter-spacing: 0.18em;
     text-transform: uppercase;

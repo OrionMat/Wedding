@@ -1,6 +1,6 @@
 ---
 // The illustration for one schedule stage, with a small looping animation.
-// 'church' and 'reception' use the real watercolours; the others are hand-drawn
+// 'church' and 'reception' use the real watercolours, 'car' the convoy picture; the others are hand-drawn
 // placeholders in the same washed style until matching watercolours are made
 // (see CONTENT_TODO.md). Animations pause on stages that aren't showing and are
 // switched off for people who prefer reduced motion.
@@ -22,6 +22,11 @@ interface Props {
 }
 const { art } = Astro.props;
 const ink = '#5a5a52';
+// confetti over the reception, where the party is: across (%), delay (s), fall time (s), size (px)
+const confetti = [
+  [6, 0, 5.5, 9], [15, 1.6, 6.2, 7], [24, 0.7, 5, 10], [34, 2.4, 6.6, 8], [43, 0.2, 5.8, 9],
+  [53, 1.9, 6, 7], [62, 0.9, 5.2, 10], [71, 2.8, 6.4, 8], [80, 1.2, 5.6, 9], [90, 0.4, 6.1, 7],
+];
 const wash = `wash-${art}`;
 // leaves dropping from the tree on the left of the church picture:
 // start across (% of picture), start down (%), delay (s), fall time (s), size (px),
@@ -81,25 +86,14 @@ const bulbs = [
 
   {
     art === 'reception' && (
-      <>
+      <div class="pic-wrap" style={`aspect-ratio: ${recatadou.width} / ${recatadou.height}`}>
         <Image src={recatadou} alt="" widths={[480, 960]} sizes="(max-width: 700px) 70vw, 340px" class="picture" />
-        <svg class="coupes" viewBox="0 0 120 120" fill="none" stroke={ink} stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <g class="bubbles" fill="#e8c88f" stroke="none">
-            <circle cx="44" cy="40" r="2.6" style="--d:0s" />
-            <circle cx="60" cy="36" r="2" style="--d:0.8s" />
-            <circle cx="74" cy="42" r="2.4" style="--d:1.5s" />
-            <circle cx="52" cy="44" r="1.8" style="--d:2.1s" />
-          </g>
-          <g class="coupe coupe--left">
-            <path d="M22 58 Q 40 74 58 58 Z" fill="#f3e2b0" />
-            <path d="M40 66 V 96 M30 98 H 50" />
-          </g>
-          <g class="coupe coupe--right">
-            <path d="M62 58 Q 80 74 98 58 Z" fill="#f3e2b0" />
-            <path d="M80 66 V 96 M70 98 H 90" />
-          </g>
-        </svg>
-      </>
+        <div class="confetti">
+          {confetti.map(([x, d, t, sz]) => (
+            <i style={`--x:${x}%;--d:${d}s;--t:${t}s;--s:${sz}px`} />
+          ))}
+        </div>
+      </div>
     )
   }
 
@@ -289,49 +283,55 @@ const bulbs = [
     }
   }
 
-  /* reception: two coupes clinking, bubbles rising */
-  .coupes {
+  /* reception: confetti in the flag colours, falling over the party */
+  .confetti {
     position: absolute;
-    left: 4%;
-    bottom: 0;
-    width: clamp(84px, 16vw, 128px);
-    overflow: visible;
+    inset: 0;
+    container-type: size;
+    overflow: hidden;
+    pointer-events: none;
   }
-  .coupe {
-    transform-box: fill-box;
-    transform-origin: 50% 100%;
-    animation: clink 2.4s ease-in-out infinite;
-  }
-  .coupe--left {
-    --lean: 9deg;
-  }
-  .coupe--right {
-    --lean: -9deg;
-  }
-  @keyframes clink {
-    0%,
-    100% {
-      transform: rotate(0deg);
-    }
-    40%,
-    50% {
-      transform: rotate(var(--lean));
-    }
-  }
-  .bubbles circle {
-    animation: rise 2.6s ease-in infinite var(--d);
+  .confetti i {
+    position: absolute;
+    top: -12px;
+    left: var(--x);
+    width: var(--s);
+    height: calc(var(--s) * 0.7);
+    background: var(--c, #b3472f);
     opacity: 0;
+    animation: confetti-fall var(--t) linear var(--d) infinite;
   }
-  @keyframes rise {
+  :global([data-flag='en']) .confetti i:nth-child(3n + 1) {
+    --c: var(--ke-black);
+  }
+  :global([data-flag='en']) .confetti i:nth-child(3n + 2) {
+    --c: var(--ke-red);
+  }
+  :global([data-flag='en']) .confetti i:nth-child(3n) {
+    --c: var(--ke-green);
+  }
+  :global([data-flag='fr']) .confetti i:nth-child(3n + 1) {
+    --c: var(--fr-blue-ink);
+  }
+  :global([data-flag='fr']) .confetti i:nth-child(3n + 2) {
+    --c: var(--fr-red);
+  }
+  :global([data-flag='fr']) .confetti i:nth-child(3n) {
+    --c: var(--fr-blue);
+  }
+  @keyframes confetti-fall {
     0% {
-      transform: translateY(14px);
+      transform: translateY(0) rotate(0deg);
       opacity: 0;
     }
-    20% {
-      opacity: 1;
+    8% {
+      opacity: 0.9;
+    }
+    85% {
+      opacity: 0.9;
     }
     100% {
-      transform: translateY(-30px);
+      transform: translateY(calc(100cqh + 12px)) rotate(540deg);
       opacity: 0;
     }
   }
