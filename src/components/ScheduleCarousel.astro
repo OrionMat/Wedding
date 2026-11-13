@@ -66,10 +66,13 @@ const total = c.items.length;
     // the stage we're on, or heading to while the strip slides
     let target = 0;
 
-    // scroll position that puts a stage in the middle of the strip
+    // scroll position that puts a stage in the middle of the strip. Measured from the
+    // stage's centre, which stays put when stages out of view are shrunk (their edges don't),
+    // so the glide lands exactly where snapping would and nothing tugs it back afterwards
     const centreOf = (s: HTMLElement) => {
-      const left = s.getBoundingClientRect().left - track.getBoundingClientRect().left + track.scrollLeft;
-      return Math.max(0, Math.min(track.scrollWidth - track.clientWidth, left - (track.clientWidth - s.offsetWidth) / 2));
+      const r = s.getBoundingClientRect();
+      const mid = r.left + r.width / 2 - track.getBoundingClientRect().left + track.scrollLeft;
+      return Math.max(0, Math.min(track.scrollWidth - track.clientWidth, mid - track.clientWidth / 2));
     };
 
     const show = (i: number) => {
