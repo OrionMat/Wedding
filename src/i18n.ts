@@ -1,4 +1,6 @@
-export const languages = { en: 'EN', fr: 'FR' } as const;
+// Label shown on the language switcher. English is shown as "KE" (Kenya), to pair
+// with "FR" and the flag-coloured buttons on the home page.
+export const languages = { en: 'KE', fr: 'FR' } as const;
 export type Lang = keyof typeof languages;
 export const defaultLang: Lang = 'en';
 
