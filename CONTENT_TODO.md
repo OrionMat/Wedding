@@ -9,7 +9,7 @@ Everything below is currently a placeholder or a guess on the live pages. Text l
 - [ ] **Hotels**: real recommendations by price band, plus any room blocks or discount codes (`travel.stay`)
 - [ ] **FAQ answers**: dress code, plus-ones, children, gift list (`faqs.items`, the Q&A at the bottom of the Details page)
 - [ ] **RSVP provider**: deploy on Netlify (nothing to do) or set up Formspree
-- [ ] **French copy**: a first draft; have Josephine or family check it (including the image labels, e.g. “Chez les grands-parents de Josephine”)
+- [ ] **French copy**: a first draft; have Josephine or family check it (including the image labels, e.g. “Chez les grands-parents de Josephine”, and “Cadeaux” on the home-page Registry card)
 
 ## Please check
 - [ ] Travel times and airport/station choices (`travel.getting`)

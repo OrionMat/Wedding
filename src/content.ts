@@ -25,6 +25,8 @@ const en = {
     collageAlt:
       'Our save-the-date on denim: a letter with a "Greetings from London" postcard, a kraft envelope and a photo-booth strip of the two of us.',
     rsvp: 'RSVP',
+    // short labels for the paper-card buttons on the letter
+    cards: { details: 'Details', registry: 'Registry' },
     // the two family lines are staggered; `name` is set large, `before`/`after` small
     families: [
       { before: 'The', name: 'Latreille', after: 'and' },
@@ -164,6 +166,7 @@ const fr: Content = {
   home: {
     collageAlt: en.home.collageAlt,
     rsvp: 'RSVP',
+    cards: { details: 'Détails', registry: 'Cadeaux' },
     families: [
       { before: 'Les familles', name: 'Latreille', after: 'et' },
       { before: '', name: 'Mathews', after: '' },
