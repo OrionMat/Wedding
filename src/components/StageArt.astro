@@ -7,8 +7,14 @@
 import { Image } from 'astro:assets';
 import church from '../assets/illus-church.png';
 import recatadou from '../assets/illus-recatadou.png';
-// an animated GIF, so it's served as it is (resizing would drop the animation)
-import cars from '../assets/illus-cars.gif';
+import cars from '../assets/illus-cars.png';
+// the convoy stands still while its wheels turn: a few spokes drawn over each plain
+// hubcap spin round. Centre x, centre y and hubcap radius, in the picture's pixels (719 × 236).
+const wheels = [
+  [79, 190, 12], [239, 189, 11.5],
+  [323, 190, 9.5], [423, 190, 9.5],
+  [512, 189, 10], [654, 189, 10],
+];
 import type { StageArt } from '../content';
 
 interface Props {
@@ -57,7 +63,19 @@ const bulbs = [
 
   {
     art === 'car' && (
-      <img src={cars.src} width={cars.width} height={cars.height} alt="" loading="lazy" decoding="async" class="picture picture--cars" />
+      <div class="convoy">
+        <Image src={cars} alt="" widths={[719]} sizes="(max-width: 700px) 90vw, 560px" class="picture" />
+        <svg class="hubs" viewBox="0 0 719 236" fill="none" stroke={ink} stroke-linecap="round">
+          {wheels.map(([x, y, r]) => (
+            <g class="hub" style={`transform-origin:${x}px ${y}px`}>
+              {[0, 72, 144, 216, 288].map((a) => (
+                <path d={`M${x} ${y - 2.5} V ${y - r + 1.5}`} transform={`rotate(${a} ${x} ${y})`} stroke-width="1.6" opacity="0.7" />
+              ))}
+              <circle cx={x} cy={y} r="2.4" fill={ink} stroke="none" opacity="0.8" />
+            </g>
+          ))}
+        </svg>
+      </div>
     )
   }
 
@@ -318,11 +336,28 @@ const bulbs = [
     }
   }
 
-  /* car: the convoy GIF; its white backdrop melts into the paper */
-  .picture--cars {
-    height: auto;
+  /* car: the convoy standing still, wheels turning; its white backdrop melts into the paper */
+  .convoy {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
     align-self: center;
+  }
+  .convoy :global(.picture) {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: none;
     mix-blend-mode: multiply;
+  }
+  .hubs {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .hub {
+    animation: spin 0.8s linear infinite;
   }
 
   /* dinner: candle flames flickering */

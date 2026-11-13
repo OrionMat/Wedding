@@ -1,6 +1,6 @@
 ---
 // The day as a side-scrolling strip of stages, after the schedule on finn-brinn.co.uk:
-// one stage centred at a time with its neighbours peeking in, ‹ › arrows, dots to
+// one stage at a time, ‹ › arrows, dots to
 // jump between stages, swipe on phones and the arrow keys on a keyboard.
 import StageArt from './StageArt.astro';
 import { type Lang } from '../i18n';
@@ -139,12 +139,6 @@ const total = c.items.length;
     prev.addEventListener('click', () => go(target - 1));
     next.addEventListener('click', () => go(target + 1));
     dots.forEach((d, i) => d.addEventListener('click', () => go(i)));
-    // a click on a peeking neighbour brings it to the middle
-    stages.forEach((s, i) =>
-      s.addEventListener('click', (e) => {
-        if (i !== target && !(e.target as Element).closest('a')) go(i);
-      }),
-    );
     track.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight') {
         e.preventDefault();
@@ -161,11 +155,9 @@ const total = c.items.length;
 
 <style>
   .track {
-    /* stage width, as a share of the strip; the rest is split between the
-       neighbours peeking in on either side */
-    --stage: 76%;
+    /* one stage at a time, filling the strip; the gap keeps the next one out of sight */
     display: flex;
-    gap: 3%;
+    gap: 6%;
     padding: 8px 0 4px;
     list-style: none;
     overflow-x: auto;
@@ -176,16 +168,8 @@ const total = c.items.length;
   .track::-webkit-scrollbar {
     display: none;
   }
-  /* spacers either side, so the first and last stages can sit in the middle
-     (scroll containers don't reliably count end padding) */
-  .track::before,
-  .track::after {
-    content: '';
-    flex: 0 0 calc((100% - var(--stage)) / 2 - 3%);
-  }
-
   .stage {
-    flex: 0 0 var(--stage);
+    flex: 0 0 100%;
     scroll-snap-align: center;
     display: flex;
     flex-direction: column;
@@ -194,12 +178,10 @@ const total = c.items.length;
     opacity: 0.28;
     transform: scale(0.94);
     transition: opacity 0.4s ease, transform 0.4s ease;
-    cursor: pointer;
   }
   .stage.is-active {
     opacity: 1;
     transform: none;
-    cursor: auto;
   }
   /* only the stage you're looking at is animated */
   .stage:not(.is-active) :global(*) {
@@ -326,11 +308,6 @@ const total = c.items.length;
     --dot: var(--fr-red);
   }
 
-  @media (max-width: 600px) {
-    .track {
-      --stage: 86%;
-    }
-  }
   @media (prefers-reduced-motion: reduce) {
     .stage :global(*) {
       animation: none !important;
