@@ -22,6 +22,21 @@
   --font-label: 'Libre Caslon Text', 'Adobe Caslon Pro', Georgia, serif;
   --font-sans: 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
+  /* Flag palette for the paper cards: Kenya in English, France in French */
+  --ke-black: #2b2622;
+  --ke-black-ink: #efe6cf;
+  --ke-red: #b3472f;
+  --ke-red-ink: #f3e9d2;
+  --ke-green: #8c9d6a;
+  --ke-green-ink: #22301a;
+  --fr-blue: #a9b9cf;
+  --fr-blue-ink: #26385a;
+  --fr-white: #f4f1e4;
+  --fr-white-ink: var(--color-headline);
+  --fr-white-rule: #3e3e3a;
+  --fr-red: #b3472f;
+  --fr-red-ink: #f3e9d2;
+
   --radius-field: 15px;
   --radius-pill: 999px;
   --radius-card: 16px;

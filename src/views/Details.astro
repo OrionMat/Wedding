@@ -1,12 +1,12 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import FaqList from '../components/FaqList.astro';
 import Arrow from '../components/Arrow.astro';
-import PageHead from '../components/PageHead.astro';
 import RuleList from '../components/RuleList.astro';
 import recatadou from '../assets/illus-recatadou.png';
 import church from '../assets/illus-church-street.jpg';
+import denimTile from '../assets/denim-tile.jpg';
 import { type Lang } from '../i18n';
 import { t } from '../content';
 import { MAPS } from '../config';
@@ -17,10 +17,15 @@ interface Props {
 const { lang } = Astro.props;
 const all = t(lang);
 const c = all.info;
+// the same denim as the home page, behind the paper sheets
+const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
 ---
 
 <Base lang={lang} title={c.title}>
-  <section class="intro">
+  <!-- Each section is a sheet of paper on the denim; each sheet after the first has a
+       flag-coloured card label tucked over its top edge, coloured like the home buttons -->
+  <div class="desk" style={`--denim: url(${denim.src})`} data-flag={lang}>
+  <section class="sheet intro" style="--tilt: -0.5deg">
     <figure class="church">
       <Image
         src={church}
@@ -61,13 +66,8 @@ const c = all.info;
     </figure>
   </section>
 
-  <section class="page venues" aria-labelledby="venues-title">
-    <div class="column">
-      <header class="venues-head" data-reveal>
-        <p class="eyebrow">{c.venuesEyebrow}</p>
-        <h2 class="section-title" id="venues-title">{c.venuesTitle}</h2>
-      </header>
-    </div>
+  <section class="sheet" id="venues" style="--tilt: 0.6deg" aria-labelledby="venues-title">
+    <h2 class="label label--1" id="venues-title" style="--r: -3deg"><span>{c.venuesTitle}</span></h2>
     <div class="venue-grid">
       <article class="venue" data-reveal>
         <p class="eyebrow">{c.ceremony.label}</p>
@@ -84,9 +84,9 @@ const c = all.info;
     </div>
   </section>
 
-  <section class="block" id="schedule" aria-labelledby="schedule-title">
+  <section class="sheet" id="schedule" style="--tilt: -0.4deg" aria-labelledby="schedule-title">
+    <h2 class="label label--2" id="schedule-title" style="--r: 2deg"><span>{all.timings.title}</span></h2>
     <div class="column">
-      <PageHead level="h2" id="schedule-title" title={all.timings.title} vignette="bell" />
       <ol class="timeline">
         {
           all.timings.items.map((item) => (
@@ -105,10 +105,9 @@ const c = all.info;
     </div>
   </section>
 
-  <section class="block" id="travel" aria-labelledby="travel-title">
+  <section class="sheet" id="travel" style="--tilt: 0.5deg" aria-labelledby="travel-title">
+    <h2 class="label label--3" id="travel-title" style="--r: -2deg"><span>{all.travel.title}</span></h2>
     <div class="column">
-      <PageHead level="h2" id="travel-title" title={all.travel.title} vignette="train" />
-
       <div class="sub" data-reveal>
         <p class="eyebrow">{all.travel.gettingEyebrow}</p>
         <h3 class="sub-title">{all.travel.gettingTitle}</h3>
@@ -140,20 +139,110 @@ const c = all.info;
     </div>
   </section>
 
-  <section class="block block--last" id="qa" aria-labelledby="qa-title">
+  <section class="sheet" id="qa" style="--tilt: -0.3deg" aria-labelledby="qa-title">
+    <h2 class="label label--1" id="qa-title" style="--r: 3deg"><span>{all.faqs.title}</span></h2>
     <div class="column">
-      <PageHead level="h2" id="qa-title" title={all.faqs.title} intro={all.faqs.intro} vignette="letter" />
+      <p class="sheet-intro muted">{all.faqs.intro}</p>
       <div data-reveal>
         <FaqList items={all.faqs.items} />
       </div>
     </div>
   </section>
+  </div>
 </Base>
 
 <style>
-  .intro {
-    padding: 64px 0 24px;
+  /* the denim desk the sheets lie on */
+  .desk {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(72px, 10vw, 104px);
+    min-height: 100svh;
+    padding: 96px clamp(10px, 4vw, 40px) 112px;
+    background: #8ea2bb var(--denim) center top / 740px auto repeat;
   }
+
+  /* a sheet of letter paper with a printed double border, laid slightly askew */
+  .sheet {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: clamp(64px, 9vw, 88px) clamp(22px, 6vw, 64px) clamp(52px, 7vw, 72px);
+    background: #fff;
+    box-shadow: 0 18px 40px -12px rgba(20, 30, 50, 0.45);
+    outline: 4px double rgba(120, 140, 185, 0.55);
+    outline-offset: clamp(-16px, -1.8vw, -9px);
+    transform: rotate(var(--tilt, 0deg));
+  }
+  .sheet::after {
+    content: '';
+    position: absolute;
+    inset: clamp(15px, 2.8vw, 26px);
+    border: 1.5px dashed rgba(214, 160, 100, 0.55);
+    pointer-events: none;
+  }
+  .intro {
+    padding-top: clamp(40px, 6vw, 64px);
+    padding-left: clamp(16px, 4vw, 48px);
+    padding-right: clamp(16px, 4vw, 48px);
+  }
+  .sheet-intro {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  /* flag-coloured card label tucked over the top edge of a sheet, like the home buttons */
+  .label {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    z-index: 1;
+    margin: 0;
+    padding: 6px;
+    background-color: var(--card-bg);
+    /* faint paper grain */
+    background-image: linear-gradient(170deg, rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0.05));
+    color: var(--card-ink);
+    font-size: clamp(1.05rem, 3.2vw, 1.55rem);
+    line-height: 1;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+    transform: translate(-50%, -55%) rotate(var(--r, 0deg));
+  }
+  .label span {
+    display: block;
+    padding: 0.6em 0.95em 0.5em;
+    border: 4px double var(--card-rule, currentColor);
+  }
+  [data-flag='en'] .label--1 {
+    --card-bg: var(--ke-black);
+    --card-ink: var(--ke-black-ink);
+  }
+  [data-flag='en'] .label--2 {
+    --card-bg: var(--ke-red);
+    --card-ink: var(--ke-red-ink);
+  }
+  [data-flag='en'] .label--3 {
+    --card-bg: var(--ke-green);
+    --card-ink: var(--ke-green-ink);
+  }
+  [data-flag='fr'] .label--1 {
+    --card-bg: var(--fr-blue);
+    --card-ink: var(--fr-blue-ink);
+  }
+  [data-flag='fr'] .label--2 {
+    --card-bg: var(--fr-white);
+    --card-ink: var(--fr-white-ink);
+    --card-rule: var(--fr-white-rule);
+  }
+  [data-flag='fr'] .label--3 {
+    --card-bg: var(--fr-red);
+    --card-ink: var(--fr-red-ink);
+  }
+
   figure {
     margin: 0;
     position: relative;
@@ -248,15 +337,6 @@ const c = all.info;
     margin: 4px 0 0 30%;
   }
 
-  .venues {
-    border-top: 1px solid var(--color-rule);
-    padding-top: 96px;
-    padding-bottom: 0;
-  }
-  .venues-head {
-    text-align: center;
-    margin-bottom: 40px;
-  }
   .venue-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
@@ -275,15 +355,6 @@ const c = all.info;
     margin-bottom: 10px;
   }
 
-  /* Schedule, Travel and Q&A sections */
-  .block {
-    padding: 96px var(--gutter) 0;
-    margin-top: 96px;
-    border-top: 1px solid var(--color-rule);
-  }
-  .block--last {
-    padding-bottom: 112px;
-  }
 
   .timeline {
     list-style: none;
@@ -321,7 +392,7 @@ const c = all.info;
     height: 9px;
     margin: 10px auto 0;
     border-radius: 50%;
-    background: var(--color-bg);
+    background: #fff;
     border: 1px solid var(--color-ink);
     position: relative;
     z-index: 1;

@@ -234,33 +234,32 @@ const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
     --dy: calc(var(--u) * -0.1);
   }
 
-  /* English: the Kenyan flag, black, red, green (with cream rules for its white bands) */
+  /* English: the Kenyan flag, black, red, green (with cream rules for its white bands);
+     French: the French flag, blue, white, red. Colours live in global.css. */
   [data-flag='en'] .card--details {
-    --card-bg: #2b2622;
-    --card-ink: #efe6cf;
+    --card-bg: var(--ke-black);
+    --card-ink: var(--ke-black-ink);
   }
   [data-flag='en'] .card--registry {
-    --card-bg: #b3472f;
-    --card-ink: #f3e9d2;
+    --card-bg: var(--ke-red);
+    --card-ink: var(--ke-red-ink);
   }
   [data-flag='en'] .card--rsvp {
-    --card-bg: #8c9d6a;
-    --card-ink: #22301a;
+    --card-bg: var(--ke-green);
+    --card-ink: var(--ke-green-ink);
   }
-
-  /* French: the French flag, blue, white, red */
   [data-flag='fr'] .card--details {
-    --card-bg: #a9b9cf;
-    --card-ink: #26385a;
+    --card-bg: var(--fr-blue);
+    --card-ink: var(--fr-blue-ink);
   }
   [data-flag='fr'] .card--registry {
-    --card-bg: #f4f1e4;
-    --card-ink: var(--color-headline);
-    --card-rule: #3e3e3a;
+    --card-bg: var(--fr-white);
+    --card-ink: var(--fr-white-ink);
+    --card-rule: var(--fr-white-rule);
   }
   [data-flag='fr'] .card--rsvp {
-    --card-bg: #b3472f;
-    --card-ink: #f3e9d2;
+    --card-bg: var(--fr-red);
+    --card-ink: var(--fr-red-ink);
   }
 
   @media (max-aspect-ratio: 3/4) {
