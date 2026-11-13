@@ -25,7 +25,12 @@ const en = {
     collageAlt:
       'Our save-the-date on denim: a letter with a "Greetings from London" postcard, a kraft envelope and a photo-booth strip of the two of us.',
     rsvp: 'RSVP',
-    invite: 'Celebrate the wedding of',
+    // the two family lines are staggered; `name` is set large, `before`/`after` small
+    families: [
+      { before: 'The', name: 'Latreille', after: 'and' },
+      { before: '', name: 'Mathews', after: 'families' },
+    ],
+    invite: 'invite you to celebrate the marriage of',
   },
   info: {
     title: 'Details',
@@ -159,7 +164,11 @@ const fr: Content = {
   home: {
     collageAlt: en.home.collageAlt,
     rsvp: 'RSVP',
-    invite: 'Célébrez le mariage de',
+    families: [
+      { before: 'Les familles', name: 'Latreille', after: 'et' },
+      { before: '', name: 'Mathews', after: '' },
+    ],
+    invite: 'vous invitent à célébrer le mariage de',
   },
   info: {
     title: 'Détails',

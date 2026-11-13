@@ -15,6 +15,9 @@
   --font-serif: 'Caudex', Georgia, serif;
   --font-accent: 'Caudex', Georgia, serif;
   --font-label: 'Libre Caslon Text', 'Adobe Caslon Pro', Georgia, serif;
+  /* wedge-serif display face for the names on the home letter (after alilabelle.co) */
+  --font-headline: 'Germania One', 'Caudex', Georgia, serif;
+  --color-headline: #4b3618;
   --font-sans: 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   --radius-field: 15px;

@@ -38,11 +38,21 @@ const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
       </picture>
       <!-- blank paper laid over the handwriting, inside the letter's printed border -->
       <div class="letter">
+        <p class="families">
+          {
+            c.home.families.map((f, i) => (
+              <span class:list={['family', `family--${i + 1}`]}>
+                {f.before && <span class="small">{f.before}</span>}
+                <span class="family-name">{f.name}</span>
+                {f.after && <span class="small">{f.after}</span>}
+              </span>
+            ))
+          }
+        </p>
         <p class="invite">{c.home.invite}</p>
-        <h1 class="names">Orion <span class="amp">&amp;</span> Josephine</h1>
-        <span class="rule" aria-hidden="true"></span>
+        <h1 class="couple">{c.names}</h1>
         <p class="detail">{c.info.church}</p>
-        <p class="detail date">{c.info.date}</p>
+        <p class="detail">{c.info.date}</p>
       </div>
       <a class="tag" href="#rsvp" data-rsvp-open>
         <span class="tag-hole" aria-hidden="true"></span>
@@ -106,41 +116,53 @@ const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
   .letter p {
     margin: 0;
   }
+
+  /* "The Latreille and / Mathews families", staggered like a printed invitation */
+  .families {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: calc(var(--u) * 4) !important;
+  }
+  .family {
+    display: flex;
+    align-items: baseline;
+    gap: calc(var(--u) * 0.8);
+  }
+  .family--1 {
+    align-self: flex-start;
+  }
+  .family--2 {
+    align-self: flex-end;
+    margin-top: calc(var(--u) * 0.6);
+  }
+  .family-name {
+    font-family: var(--font-headline);
+    font-size: calc(var(--u) * 5.2);
+    line-height: 1;
+    color: var(--color-headline);
+  }
+  .small {
+    font-size: calc(var(--u) * 1.3);
+  }
+
   .invite {
-    font-size: calc(var(--u) * 1.05);
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--color-ink-muted);
+    font-size: calc(var(--u) * 1.4);
   }
-  .names {
-    margin: calc(var(--u) * 1.6) 0 calc(var(--u) * 1.4);
-    font-size: calc(var(--u) * 4.4);
-    line-height: 1.02;
-    letter-spacing: -0.02em;
-  }
-  .names .amp {
-    display: block;
-    font-size: 0.6em;
-    line-height: 1.3;
-    font-style: italic;
-    color: var(--color-ink-muted);
-  }
-  .rule {
-    width: calc(var(--u) * 5);
-    height: 1px;
-    margin-bottom: calc(var(--u) * 1.4);
-    background: var(--color-ink-muted);
+  .couple {
+    margin: calc(var(--u) * 1.2) 0 calc(var(--u) * 3.4);
+    font-family: var(--font-headline);
+    font-size: calc(var(--u) * 3);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--color-headline);
   }
   .detail {
     font-size: calc(var(--u) * 1.35);
     line-height: 1.35;
   }
-  .date {
-    margin-top: calc(var(--u) * 0.6) !important;
-    font-size: calc(var(--u) * 1.15);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--color-ink-soft);
+  .detail + .detail {
+    margin-top: calc(var(--u) * 0.7);
   }
 
   /* kraft luggage tag that sat on the letter in the Wix version */
