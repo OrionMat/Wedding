@@ -1,7 +1,14 @@
 # Orion and Josephine: wedding website
 
 Static [Astro](https://astro.build) site for our wedding on **Saturday 3rd July 2027** in Labeaume, Ardèche.
-Pages: Home (the save-the-date letter), Information (including FAQs), RSVP, Timings, Travel & Accommodation, Things to Do, in English (`/`) and French (`/fr/`).
+Three pages, in English (`/`) and French (`/fr/`):
+
+- **Home**: the save-the-date letter; the RSVP tag opens the RSVP form as a popup
+- **Details**: the venues, Schedule, Travel & Accommodation, and Q&A
+- **Registry**: a coming-soon page for now
+
+The RSVP popup (`src/components/RsvpDialog.astro`) is on every page: anything with `data-rsvp-open` opens it, as does a link ending in `#rsvp`.
+Old page addresses redirect to the new ones via `public/_redirects`.
 
 ## Run it locally
 
@@ -22,7 +29,8 @@ npm run preview    # serve the built site
 | Colours, fonts, spacing | `src/styles/global.css` (`:root` tokens) |
 | Page layouts | `src/views/*.astro` (each is used by both `src/pages/` and `src/pages/fr/`) |
 | Menu and header | `src/layouts/Base.astro` |
-| Placeholder page vignettes | `src/components/Vignette.astro` |
+| RSVP popup | `src/components/RsvpDialog.astro` |
+| Placeholder section vignettes | `src/components/Vignette.astro` |
 
 Outstanding details to fill in are listed in [CONTENT_TODO.md](CONTENT_TODO.md).
 

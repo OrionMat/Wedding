@@ -17,20 +17,18 @@ const en = {
     close: 'Close',
     pages: {
       '': 'Home',
-      information: 'Information',
-      rsvp: 'RSVP',
-      timings: 'Timings',
-      travel: 'Travel & Accommodation',
-      'things-to-do': 'Things to Do in the Ardèche',
+      details: 'Details',
+      registry: 'Registry',
     },
   },
   home: {
     collageAlt:
-      'Our save-the-date: a handwritten letter on denim, with a "Greetings from London" postcard, a kraft envelope and a photo-booth strip of the two of us. The letter reads: Hello Rafifio, It’s been a short, sweet decade since Josephine mistook a guy at her university bar as being French. Then, a mere year after that, she mistook him again for his housemate. Now after graduating, moving countries, moving in together, we’re asking you to save this date: July 3rd 2027 in Labeaume, Ardèche. Because we’re getting married! It’s beside a beautiful village where Josephine spent her summers growing up. If you can’t make it, hakuna matata, just let us know. Full details to follow. Merci! Josephine and Orion.',
+      'Our save-the-date on denim: a letter with a "Greetings from London" postcard, a kraft envelope and a photo-booth strip of the two of us.',
     rsvp: 'RSVP',
+    invite: 'Celebrate the wedding of',
   },
   info: {
-    title: 'Information',
+    title: 'Details',
     church: 'Église Notre-Dame des Pommiers, L’Argentiere',
     date: 'Saturday 3rd July 2027',
     rsvp: 'RSVP',
@@ -67,10 +65,10 @@ const en = {
     sending: 'Sending…',
     thanksYes: 'Merci! We can’t wait to celebrate with you.',
     thanksNo: 'Thank you for letting us know. You’ll be missed!',
-    error: 'Something went wrong. Please try again, or just email us.',
+    error: 'Something went wrong. Please try again, or just message us.',
   },
   timings: {
-    title: 'Timings',
+    title: 'Schedule',
     items: [
       { time: '14:00', title: 'Ceremony', place: 'Église Notre-Dame des Pommiers, L’Argentiere' },
       { time: '15:00', title: 'Head to Labeaume', place: 'About 25 minutes by car' },
@@ -120,21 +118,8 @@ const en = {
     stayOutro:
       'These are just a starting point. Gîtes, Airbnbs and campsites nearby are all great choices too. It’s peak season in July, so book early!',
   },
-  things: {
-    title: 'Things to Do in the Ardèche',
-    intro: 'A few of our favourite spots, all within half an hour or so of Labeaume.',
-    mapLink: 'Map',
-    items: [
-      { title: 'Labeaume village', note: 'Stone lanes, a riverside beach and the best spot for a swim.' },
-      { title: 'Pont d’Arc', note: 'The huge natural stone arch over the river. Go early to beat the crowds.' },
-      { title: 'Canoeing the Gorges de l’Ardèche', note: 'Hire a canoe in Vallon and paddle through the gorges.' },
-      { title: 'Grotte Chauvet 2', note: 'A replica of some of the oldest cave paintings in the world.' },
-      { title: 'Balazuc', note: 'One of the most beautiful villages in France, perched above the river.' },
-      { title: 'Ruoms market', note: 'Local cheese, chestnuts and wine. Perfect for picnic supplies.' },
-    ] as Entry[],
-  },
   faqs: {
-    title: 'FAQs',
+    title: 'Q&A',
     intro: 'Answers to the things you might be wondering. If something’s missing, just ask.',
     items: [
       // [CONFIRM] all answers
@@ -147,6 +132,11 @@ const en = {
       { q: 'Do you have a gift list?', a: 'Having you there is the best gift. Details to follow.' },
       { q: 'Who do I contact with questions?', a: 'Just message either of us and we’ll get back to you.' },
     ],
+  },
+  registry: {
+    title: 'Registry',
+    soon: 'Coming soon',
+    text: 'We’re still putting this together. Check back closer to the day!',
   },
 };
 
@@ -162,19 +152,17 @@ const fr: Content = {
     close: 'Fermer',
     pages: {
       '': 'Accueil',
-      information: 'Informations',
-      rsvp: 'RSVP',
-      timings: 'Programme',
-      travel: 'Voyage & Hébergement',
-      'things-to-do': 'À faire en Ardèche',
+      details: 'Détails',
+      registry: 'Liste de mariage',
     },
   },
   home: {
     collageAlt: en.home.collageAlt,
     rsvp: 'RSVP',
+    invite: 'Célébrez le mariage de',
   },
   info: {
-    title: 'Informations',
+    title: 'Détails',
     church: 'Église Notre-Dame des Pommiers, L’Argentiere',
     date: 'Samedi 3 juillet 2027',
     rsvp: 'RSVP',
@@ -262,21 +250,8 @@ const fr: Content = {
     stayOutro:
       'Ce n’est qu’un point de départ : gîtes, Airbnb et campings des environs sont aussi de très bonnes options. Juillet est en pleine saison, réservez tôt !',
   },
-  things: {
-    title: 'À faire en Ardèche',
-    intro: 'Quelques-uns de nos coins préférés, tous à une demi-heure environ de Labeaume.',
-    mapLink: 'Carte',
-    items: [
-      { title: 'Le village de Labeaume', note: 'Ruelles de pierre, plage au bord de la rivière et baignade idéale.' },
-      { title: 'Le Pont d’Arc', note: 'L’immense arche naturelle au-dessus de la rivière. Allez-y tôt.' },
-      { title: 'Descendre les Gorges de l’Ardèche', note: 'Louez un canoë à Vallon et pagayez dans les gorges.' },
-      { title: 'La Grotte Chauvet 2', note: 'Réplique de certaines des plus anciennes peintures rupestres au monde.' },
-      { title: 'Balazuc', note: 'L’un des plus beaux villages de France, perché au-dessus de la rivière.' },
-      { title: 'Le marché de Ruoms', note: 'Fromages, châtaignes et vins locaux : parfait pour un pique-nique.' },
-    ],
-  },
   faqs: {
-    title: 'FAQ',
+    title: 'Questions & réponses',
     intro: 'Les réponses à vos questions. S’il manque quelque chose, demandez-nous.',
     items: [
       { q: 'Quelle tenue porter ?', a: 'Détails à venir. Pensez mariage d’été dans le sud : tissus légers et chaussures pour danser.' },
@@ -288,6 +263,11 @@ const fr: Content = {
       { q: 'Avez-vous une liste de mariage ?', a: 'Votre présence est le plus beau des cadeaux. Détails à venir.' },
       { q: 'Qui contacter en cas de question ?', a: 'Écrivez à l’un de nous deux, nous vous répondrons.' },
     ],
+  },
+  registry: {
+    title: 'Liste de mariage',
+    soon: 'Bientôt disponible',
+    text: 'Nous y travaillons encore. Revenez un peu plus près du jour J !',
   },
 };
 

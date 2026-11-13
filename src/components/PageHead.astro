@@ -5,12 +5,16 @@ interface Props {
   title: string;
   intro?: string;
   vignette: 'flower' | 'bell' | 'train' | 'canoe' | 'letter';
+  /** h1 for a page title, h2 for a section within a page */
+  level?: 'h1' | 'h2';
+  id?: string;
 }
-const { title, intro, vignette } = Astro.props;
+const { title, intro, vignette, level = 'h1', id } = Astro.props;
+const Heading = level;
 ---
 
 <header class="page-head" data-reveal>
   <Vignette name={vignette} />
-  <h1 class="page-title">{title}</h1>
+  <Heading class="page-title" id={id}>{title}</Heading>
   {intro && <p class="page-intro">{intro}</p>}
 </header>

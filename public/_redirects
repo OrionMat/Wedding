@@ -1,0 +1,13 @@
+# Old page addresses from before the site was trimmed to three pages
+/information    /details        301
+/timings        /details#schedule   301
+/travel         /details#travel     301
+/things-to-do   /details        301
+/faqs           /details#qa     301
+/rsvp           /#rsvp          301
+/fr/information /fr/details     301
+/fr/timings     /fr/details#schedule 301
+/fr/travel      /fr/details#travel   301
+/fr/things-to-do /fr/details    301
+/fr/faqs        /fr/details#qa  301
+/fr/rsvp        /fr/#rsvp       301

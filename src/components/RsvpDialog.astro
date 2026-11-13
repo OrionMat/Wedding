@@ -1,0 +1,344 @@
+---
+// RSVP form in a popup. Included once per page by the layout; any element with
+// `data-rsvp-open` opens it, and visiting a page with #rsvp in the URL opens it too.
+import { type Lang } from '../i18n';
+import { t } from '../content';
+import { RSVP_PROVIDER, FORMSPREE_ENDPOINT } from '../config';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = t(lang).rsvp;
+const close = t(lang).nav.close;
+const netlify = RSVP_PROVIDER === 'netlify';
+---
+
+<dialog class="rsvp-dialog" id="rsvp" aria-labelledby="rsvp-title">
+  <button class="close" type="button" aria-label={close} data-rsvp-close>
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"
+      ><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg
+    >
+  </button>
+
+  <h2 id="rsvp-title">{c.title}</h2>
+  <p class="intro muted">{c.intro}</p>
+
+  <form
+    class="rsvp"
+    name="rsvp"
+    method="POST"
+    action={netlify ? '/' : FORMSPREE_ENDPOINT}
+    data-provider={RSVP_PROVIDER}
+    data-netlify={netlify ? 'true' : undefined}
+    netlify-honeypot={netlify ? 'bot-field' : undefined}
+  >
+    {netlify && <input type="hidden" name="form-name" value="rsvp" />}
+    <input type="hidden" name="language" value={lang} />
+    <p class="sr-only"><label>Don’t fill this in: <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+
+    <div class="row">
+      <label class="field">
+        <span>{c.name}</span>
+        <input name="name" required autocomplete="name" placeholder={c.namePh} />
+      </label>
+      <label class="field">
+        <span>{c.email}</span>
+        <input name="email" type="email" required autocomplete="email" placeholder={c.emailPh} />
+      </label>
+    </div>
+
+    <label class="field">
+      <span>{c.address}</span>
+      <textarea name="address" rows="2" autocomplete="street-address"></textarea>
+      <small>{c.addressHint}</small>
+    </label>
+
+    <fieldset class="choice">
+      <legend>{c.attending}</legend>
+      <label><input type="radio" name="attending" value="no" required /> <span>{c.no}</span></label>
+      <label><input type="radio" name="attending" value="yes" /> <span>{c.yes}</span></label>
+    </fieldset>
+
+    <fieldset class="extra" data-extra disabled hidden>
+      <div class="row">
+        <label class="field">
+          <span>{c.guests}</span>
+          <input name="guests" type="number" min="1" max="6" value="1" inputmode="numeric" />
+        </label>
+        <label class="field">
+          <span>{c.plusOne}</span>
+          <input name="guest_names" />
+        </label>
+      </div>
+      <label class="field">
+        <span>{c.dietary}</span>
+        <input name="dietary" placeholder={c.dietaryPh} />
+      </label>
+      <label class="field">
+        <span>{c.song}</span>
+        <input name="song" />
+      </label>
+    </fieldset>
+
+    <label class="field">
+      <span>{c.message}</span>
+      <textarea name="message" rows="3"></textarea>
+    </label>
+
+    <button class="btn submit" type="submit" data-label={c.submit} data-sending={c.sending}>{c.submit}</button>
+    <p class="status" role="status" aria-live="polite" data-error={c.error}></p>
+  </form>
+
+  <div class="thanks" hidden tabindex="-1" data-thanks-yes={c.thanksYes} data-thanks-no={c.thanksNo}>
+    <p></p>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('dialog.rsvp-dialog')!;
+  const form = dialog.querySelector<HTMLFormElement>('form.rsvp')!;
+  const extra = form.querySelector<HTMLFieldSetElement>('[data-extra]')!;
+  const status = form.querySelector<HTMLElement>('.status')!;
+  const submit = form.querySelector<HTMLButtonElement>('.submit')!;
+  const thanks = dialog.querySelector<HTMLElement>('.thanks')!;
+
+  function open() {
+    if (dialog.open) return;
+    dialog.showModal();
+    document.body.classList.add('rsvp-open');
+  }
+  function close() {
+    dialog.close();
+  }
+  dialog.addEventListener('close', () => {
+    document.body.classList.remove('rsvp-open');
+    if (location.hash === '#rsvp') history.replaceState(null, '', location.pathname + location.search);
+  });
+
+  document.addEventListener('click', (e) => {
+    const target = e.target as Element;
+    if (target.closest('[data-rsvp-open]')) {
+      e.preventDefault();
+      open();
+    } else if (target.closest('[data-rsvp-close]') || target === dialog) {
+      // a click on the dialog element itself is a click on the backdrop
+      close();
+    }
+  });
+  if (location.hash === '#rsvp') open();
+
+  form.addEventListener('change', () => {
+    const yes = (form.elements.namedItem('attending') as RadioNodeList).value === 'yes';
+    extra.hidden = !yes;
+    extra.disabled = !yes;
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submit.disabled = true;
+    submit.textContent = submit.dataset.sending!;
+    status.textContent = '';
+    const data = new FormData(form);
+    try {
+      const res =
+        form.dataset.provider === 'netlify'
+          ? await fetch('/', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: new URLSearchParams(data as unknown as Record<string, string>).toString(),
+            })
+          : await fetch(form.action, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
+      if (!res.ok) throw new Error(String(res.status));
+      const yes = data.get('attending') === 'yes';
+      thanks.querySelector('p')!.textContent = yes ? thanks.dataset.thanksYes! : thanks.dataset.thanksNo!;
+      form.hidden = true;
+      thanks.hidden = false;
+      thanks.focus();
+    } catch {
+      status.textContent = status.dataset.error!;
+      submit.disabled = false;
+      submit.textContent = submit.dataset.label!;
+    }
+  });
+</script>
+
+<style>
+  .rsvp-dialog {
+    width: min(560px, calc(100vw - 24px));
+    max-height: calc(100svh - 24px);
+    margin: auto;
+    padding: clamp(28px, 6vw, 44px);
+    border: 0;
+    border-radius: var(--radius-card);
+    background: var(--color-paper);
+    color: var(--color-ink);
+    box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.45);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .rsvp-dialog::backdrop {
+    background: rgba(30, 30, 30, 0.55);
+    backdrop-filter: blur(3px);
+  }
+  .rsvp-dialog[open] {
+    animation: pop 0.25s ease both;
+  }
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.98);
+    }
+  }
+  :global(body.rsvp-open) {
+    overflow: hidden;
+  }
+
+  .close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--color-ink);
+    cursor: pointer;
+  }
+  .close:hover {
+    background: rgba(44, 44, 44, 0.08);
+  }
+
+  h2 {
+    font-size: clamp(2rem, 6vw, 2.6rem);
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .intro {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .rsvp {
+    display: grid;
+    gap: 20px;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+    gap: 20px;
+  }
+  .field {
+    display: grid;
+    gap: 6px;
+    font-size: 15px;
+  }
+  .field small {
+    color: var(--color-ink-muted);
+    font-size: 13px;
+  }
+  input:not([type='radio']),
+  textarea {
+    width: 100%;
+    min-height: 46px;
+    padding: 11px 16px;
+    border: 1px solid var(--color-ink-muted);
+    border-radius: var(--radius-field);
+    background: rgba(253, 251, 247, 0.55);
+    color: var(--color-ink);
+    font: 16px/1.4 var(--font-sans);
+  }
+  textarea {
+    resize: vertical;
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: rgba(44, 44, 44, 0.45);
+  }
+  input:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--color-ink);
+    background: var(--color-bg);
+  }
+
+  fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+  .extra {
+    display: grid;
+    gap: 20px;
+  }
+  .extra[hidden] {
+    display: none;
+  }
+  .choice {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+  }
+  .choice legend {
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+  .choice label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font: 16px/1.4 var(--font-sans);
+    cursor: pointer;
+  }
+  .choice input {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    border: 1px solid var(--color-ink-muted);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+  }
+  .choice input::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-ink);
+    transform: scale(0);
+    transition: transform 0.15s ease;
+  }
+  .choice input:checked::after {
+    transform: scale(1);
+  }
+
+  .submit {
+    width: 100%;
+    margin-top: 4px;
+  }
+  .submit:disabled {
+    opacity: 0.6;
+    cursor: progress;
+  }
+  .status:empty {
+    display: none;
+  }
+  .status {
+    margin: 0;
+    text-align: center;
+    color: #8a2f1f;
+  }
+  .thanks {
+    text-align: center;
+    padding: 24px 0 8px;
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 5vw, 2.1rem);
+    line-height: 1.25;
+    outline: none;
+  }
+</style>

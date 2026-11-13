@@ -3,9 +3,11 @@ import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import FaqList from '../components/FaqList.astro';
 import Arrow from '../components/Arrow.astro';
+import PageHead from '../components/PageHead.astro';
+import RuleList from '../components/RuleList.astro';
 import recatadou from '../assets/illus-recatadou.png';
 import church from '../assets/illus-church-street.jpg';
-import { href, type Lang } from '../i18n';
+import { type Lang } from '../i18n';
 import { t } from '../content';
 import { MAPS } from '../config';
 
@@ -42,7 +44,7 @@ const c = all.info;
       <h1>{all.names}</h1>
       <p>{c.church}</p>
       <p>{c.date}</p>
-      <a class="rsvp-pill" href={href(lang, 'rsvp')}>{c.rsvp}</a>
+      <a class="rsvp-pill" href="#rsvp" data-rsvp-open>{c.rsvp}</a>
     </div>
 
     <figure class="reception" data-reveal>
@@ -82,12 +84,65 @@ const c = all.info;
     </div>
   </section>
 
-  <section class="page faq-section" aria-labelledby="faqs-title">
+  <section class="block" id="schedule" aria-labelledby="schedule-title">
     <div class="column">
-      <header class="venues-head" data-reveal>
-        <h2 class="section-title" id="faqs-title">{all.faqs.title}</h2>
-        <p class="muted">{all.faqs.intro}</p>
-      </header>
+      <PageHead level="h2" id="schedule-title" title={all.timings.title} vignette="bell" />
+      <ol class="timeline">
+        {
+          all.timings.items.map((item) => (
+            <li data-reveal>
+              <span class="time">{item.time}</span>
+              <span class="dot" aria-hidden="true" />
+              <div>
+                <h3>{item.title}</h3>
+                <p class="muted">{item.place}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="timeline-note muted" data-reveal>{all.timings.transportNote}</p>
+    </div>
+  </section>
+
+  <section class="block" id="travel" aria-labelledby="travel-title">
+    <div class="column">
+      <PageHead level="h2" id="travel-title" title={all.travel.title} vignette="train" />
+
+      <div class="sub" data-reveal>
+        <p class="eyebrow">{all.travel.gettingEyebrow}</p>
+        <h3 class="sub-title">{all.travel.gettingTitle}</h3>
+        <p class="muted">{all.travel.gettingIntro}</p>
+        {
+          all.travel.getting.map((g) => (
+            <>
+              <h4 class="group-label">{g.label}</h4>
+              <RuleList entries={g.entries} />
+            </>
+          ))
+        }
+      </div>
+
+      <div class="sub" data-reveal>
+        <p class="eyebrow">{all.travel.stayEyebrow}</p>
+        <h3 class="sub-title">{all.travel.stayTitle}</h3>
+        <p class="muted">{all.travel.stayIntro}</p>
+        {
+          all.travel.stay.map((g) => (
+            <>
+              <h4 class="group-label">{g.label}</h4>
+              <RuleList entries={g.entries} />
+            </>
+          ))
+        }
+        <p class="muted outro">{all.travel.stayOutro}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block block--last" id="qa" aria-labelledby="qa-title">
+    <div class="column">
+      <PageHead level="h2" id="qa-title" title={all.faqs.title} intro={all.faqs.intro} vignette="letter" />
       <div data-reveal>
         <FaqList items={all.faqs.items} />
       </div>
@@ -220,7 +275,82 @@ const c = all.info;
     margin-bottom: 10px;
   }
 
-  .faq-section {
-    padding-top: 112px;
+  /* Schedule, Travel and Q&A sections */
+  .block {
+    padding: 96px var(--gutter) 0;
+    margin-top: 96px;
+    border-top: 1px solid var(--color-rule);
+  }
+  .block--last {
+    padding-bottom: 112px;
+  }
+
+  .timeline {
+    list-style: none;
+    margin: 0 auto;
+    padding: 0;
+    max-width: 480px;
+    position: relative;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 88px;
+    top: 10px;
+    bottom: 10px;
+    width: 1px;
+    background: var(--color-rule);
+  }
+  .timeline li {
+    display: grid;
+    grid-template-columns: 72px 32px 1fr;
+    align-items: start;
+  }
+  .timeline li + li {
+    margin-top: 32px;
+  }
+  .time {
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-size: 1.15rem;
+    text-align: right;
+    padding-top: 2px;
+  }
+  .dot {
+    width: 9px;
+    height: 9px;
+    margin: 10px auto 0;
+    border-radius: 50%;
+    background: var(--color-bg);
+    border: 1px solid var(--color-ink);
+    position: relative;
+    z-index: 1;
+  }
+  .timeline h3 {
+    font-size: 1.35rem;
+    line-height: 1.4;
+  }
+  .timeline p {
+    margin: 2px 0 0;
+    font-size: 15px;
+  }
+  .timeline-note {
+    text-align: center;
+    margin: 48px 0 0;
+    font-style: italic;
+  }
+
+  .sub + .sub {
+    margin-top: 56px;
+    padding-top: 56px;
+    border-top: 1px solid var(--color-rule);
+  }
+  .sub-title {
+    font-size: clamp(1.7rem, 5vw, 2.2rem);
+    margin-bottom: 16px;
+  }
+  .outro {
+    margin-top: 32px;
+    font-size: 15px;
   }
 </style>

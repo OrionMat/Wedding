@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import RsvpDialog from '../components/RsvpDialog.astro';
 import { getImage } from 'astro:assets';
 import ogSource from '../assets/save-the-date-intro.jpg';
 import { languages, routes, href, parsePath, type Lang } from '../i18n';
@@ -95,6 +96,8 @@ const og = await getImage({ src: ogSource, width: 900, format: 'jpg' });
     <main id="main">
       <slot />
     </main>
+
+    <RsvpDialog lang={lang} />
 
     <script>
       // Overlay menu

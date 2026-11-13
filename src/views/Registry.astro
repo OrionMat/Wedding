@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+import Vignette from '../components/Vignette.astro';
+import { type Lang } from '../i18n';
+import { t } from '../content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = t(lang).registry;
+---
+
+<Base lang={lang} title={c.title}>
+  <section class="soon">
+    <Vignette name="letter" />
+    <h1>{c.title}</h1>
+    <p class="badge">{c.soon}</p>
+    <p class="muted">{c.text}</p>
+  </section>
+</Base>
+
+<style>
+  .soon {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 96px var(--gutter);
+    animation: rise 1.2s ease both;
+  }
+  .soon :global(.vignette) {
+    width: 110px;
+    margin-bottom: 20px;
+  }
+  h1 {
+    font-size: clamp(2.7rem, 8.5vw, 4.4rem);
+    letter-spacing: -0.02em;
+  }
+  .badge {
+    margin: 20px 0 16px;
+    font-size: 13px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  .muted {
+    max-width: 30em;
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+</style>
