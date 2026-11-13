@@ -38,7 +38,6 @@ const en = {
     title: 'Details',
     church: 'Église Notre-Dame des Pommiers, L’Argentiere',
     date: 'Saturday 3rd July 2027',
-    rsvp: 'RSVP',
     notes: {
       ceremony: ['Ceremony ·', 'Église, L’Argentiere'],
       grandparents: ['To Josephine’s', 'Grandparents'],
@@ -176,7 +175,6 @@ const fr: Content = {
     title: 'Détails',
     church: 'Église Notre-Dame des Pommiers, L’Argentiere',
     date: 'Samedi 3 juillet 2027',
-    rsvp: 'RSVP',
     notes: {
       ceremony: ['Cérémonie ·', 'Église, L’Argentiere'],
       grandparents: ['Chez les grands-parents', 'de Josephine'],

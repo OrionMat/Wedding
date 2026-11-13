@@ -10,12 +10,14 @@ interface Props {
   lang: Lang;
   title?: string;
   /** false on the home page, where paper cards on the letter do the navigating */
-  menu?: boolean;
+  pageLinks?: boolean;
 }
 
-const { lang, title, menu = true } = Astro.props;
+const { lang, title, pageLinks = true } = Astro.props;
 const c = t(lang);
 const { route } = parsePath(Astro.url.pathname);
+// the top-left pill links to every page except the one you're on
+const otherRoutes = routes.filter((r) => r !== route);
 const fullTitle = title ? `${title} · ${c.names}` : c.names;
 const og = await getImage({ src: ogSource, width: 900, format: 'jpg' });
 ---
@@ -52,17 +54,16 @@ const og = await getImage({ src: ogSource, width: 900, format: 'jpg' });
 
     <header class="topbar">
       {
-        menu && (
-          <button class="pill" type="button" aria-expanded="false" aria-controls="site-menu" data-menu-open>
-            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
-              <path d="M1 3.5h12M1 7h12M1 10.5h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
-            </svg>
-            {c.nav.menu}
-          </button>
+        pageLinks && (
+          <nav class="switch pages" aria-label={c.nav.menu}>
+            {otherRoutes.map((r) => (
+              <a href={href(lang, r)}>{c.nav.pages[r]}</a>
+            ))}
+          </nav>
         )
       }
 
-      <nav class="langs" aria-label="Language">
+      <nav class="switch langs" aria-label="Language">
         {
           Object.entries(languages).map(([code, label]) => (
             <a
@@ -78,32 +79,6 @@ const og = await getImage({ src: ogSource, width: 900, format: 'jpg' });
       </nav>
     </header>
 
-    {
-      menu && (
-        <div class="menu" id="site-menu" role="dialog" aria-modal="true" aria-label={c.nav.menu} hidden>
-          <button class="pill" type="button" data-menu-close>
-            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"
-              ><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg
-            >
-            {c.nav.close}
-          </button>
-          <nav aria-label="Main">
-            <ul>
-              {
-                routes.map((r) => (
-                  <li>
-                    <a href={href(lang, r)} aria-current={r === route ? 'page' : undefined}>
-                      {c.nav.pages[r]}
-                    </a>
-                  </li>
-                ))
-              }
-            </ul>
-          </nav>
-        </div>
-      )
-    }
-
     <main id="main">
       <slot />
     </main>
@@ -111,52 +86,6 @@ const og = await getImage({ src: ogSource, width: 900, format: 'jpg' });
     <RsvpDialog lang={lang} />
 
     <script>
-      // Overlay menu (not rendered on the home page)
-      const menu = document.getElementById('site-menu');
-      const openBtn = document.querySelector<HTMLButtonElement>('[data-menu-open]');
-      if (menu && openBtn) setUpMenu(menu, openBtn);
-
-      function setUpMenu(menu: HTMLElement, openBtn: HTMLButtonElement) {
-      const closeBtn = menu.querySelector<HTMLButtonElement>('[data-menu-close]')!;
-      const focusables = () => Array.from(menu.querySelectorAll<HTMLElement>('a, button'));
-
-      function open() {
-        menu.hidden = false;
-        requestAnimationFrame(() => menu.classList.add('is-open'));
-        document.body.classList.add('menu-open');
-        openBtn.setAttribute('aria-expanded', 'true');
-        closeBtn.focus();
-      }
-      function close() {
-        menu.classList.remove('is-open');
-        document.body.classList.remove('menu-open');
-        openBtn.setAttribute('aria-expanded', 'false');
-        setTimeout(() => (menu.hidden = true), 300);
-        openBtn.focus();
-      }
-      openBtn.addEventListener('click', open);
-      closeBtn.addEventListener('click', close);
-      menu.addEventListener('click', (e) => {
-        if (e.target === menu) close();
-      });
-      document.addEventListener('keydown', (e) => {
-        if (menu.hidden) return;
-        if (e.key === 'Escape') close();
-        if (e.key === 'Tab') {
-          const els = focusables();
-          const first = els[0];
-          const last = els[els.length - 1];
-          if (e.shiftKey && document.activeElement === first) {
-            e.preventDefault();
-            last.focus();
-          } else if (!e.shiftKey && document.activeElement === last) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
-      });
-      }
-
       // Fade-up on scroll
       const io = new IntersectionObserver(
         (entries) => {
@@ -203,35 +132,18 @@ const og = await getImage({ src: ogSource, width: 900, format: 'jpg' });
     pointer-events: auto;
   }
 
-  .pill {
-    justify-self: start;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    height: 38px;
-    padding: 0 16px;
-    border: 0;
-    border-radius: var(--radius-pill);
-    background: var(--color-ink);
-    color: var(--color-on-ink);
-    font: 400 16px/1 var(--font-headline);
-    letter-spacing: 0.04em;
-    cursor: pointer;
-    box-shadow: 0 4px 18px rgba(44, 44, 44, 0.16);
-  }
-
-
-  .langs {
-    grid-column: 2;
-    justify-self: end;
+  /* small pills in the top bar: page links on the left, language on the right */
+  .switch {
     display: flex;
     gap: 2px;
     padding: 4px;
     border-radius: var(--radius-pill);
     background: color-mix(in srgb, var(--color-bg) 80%, transparent);
     backdrop-filter: blur(6px);
+    /* faint edge so the pills still read on the plain cream pages */
+    box-shadow: 0 0 0 1px rgba(75, 54, 24, 0.1), 0 4px 14px rgba(44, 44, 44, 0.1);
   }
-  .langs a {
+  .switch a {
     font-family: var(--font-headline);
     font-size: 16px;
     line-height: 1;
@@ -239,65 +151,36 @@ const og = await getImage({ src: ogSource, width: 900, format: 'jpg' });
     text-decoration: none;
     padding: 7px 11px 6px;
     border-radius: var(--radius-pill);
+    color: var(--color-headline);
+    white-space: nowrap;
+    transition: background 0.2s ease;
+  }
+  @media (max-width: 420px) {
+    .topbar {
+      gap: 8px;
+    }
+    .switch a {
+      font-size: 14px;
+      padding: 7px 9px 6px;
+    }
+  }
+  .switch a:hover {
+    background: rgba(75, 54, 24, 0.1);
+  }
+  .pages {
+    grid-column: 1;
+    justify-self: start;
+  }
+  .langs {
+    grid-column: 2;
+    justify-self: end;
+  }
+  /* the language you're not reading is greyed; the current one is highlighted */
+  .langs a {
     color: rgba(75, 54, 24, 0.55);
   }
   .langs a[aria-current] {
     color: var(--color-headline);
     background: rgba(75, 54, 24, 0.1);
   }
-
-  .menu {
-    position: fixed;
-    inset: 0;
-    z-index: 50;
-    display: grid;
-    place-items: center;
-    padding: 80px var(--gutter);
-    background: color-mix(in srgb, var(--color-bg) 72%, transparent);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  .menu[hidden] {
-    display: none;
-  }
-  .menu.is-open {
-    opacity: 1;
-  }
-  .menu .pill {
-    position: absolute;
-    top: 16px;
-    left: var(--gutter);
-  }
-  .menu ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-  }
-  .menu li + li {
-    margin-top: clamp(10px, 2.4vh, 22px);
-  }
-  .menu a {
-    font-family: var(--font-display);
-    color: var(--color-headline);
-    font-size: clamp(1.9rem, 6.5vw, 2.8rem);
-    line-height: 1.15;
-    text-decoration: none;
-    transition: opacity 0.2s;
-  }
-  .menu a:hover {
-    opacity: 0.6;
-  }
-  .menu a[aria-current='page'] {
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
-    text-underline-offset: 8px;
-  }
-
-  :global(body.menu-open) {
-    overflow: hidden;
-  }
-
 </style>

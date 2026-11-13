@@ -22,66 +22,61 @@ const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
 ---
 
 <Base lang={lang} title={c.title}>
-  <!-- Each section is a sheet of paper on the denim; each sheet after the first has a
-       flag-coloured card label tucked over its top edge, coloured like the home buttons -->
+  <!-- Each section is a sheet of paper on the denim, with a flag-coloured card label
+       tucked over its top edge, coloured like the home buttons -->
+  <h1 class="sr-only">{c.title}</h1>
   <div class="desk" style={`--denim: url(${denim.src})`} data-flag={lang}>
-  <section class="sheet intro" style="--tilt: -0.5deg">
-    <figure class="church">
-      <Image
-        src={church}
-        alt="Watercolour of the stone steps in L’Argentiere climbing to the church spire, past Josephine’s grandparents’ house"
-        widths={[640, 1024]}
-        sizes="(max-width: 900px) 100vw, 900px"
-        loading="eager"
-        fetchpriority="high"
-      />
-      <figcaption class="note note--ceremony">
-        <span>{c.notes.ceremony[0]}<br />{c.notes.ceremony[1]}</span>
-        <Arrow transform="scaleX(-1)" />
-      </figcaption>
-      <p class="note note--grandparents">
-        <Arrow transform="rotate(180deg)" />
-        <span>{c.notes.grandparents[0]}<br />{c.notes.grandparents[1]}</span>
-      </p>
-    </figure>
-
-    <div class="title">
-      <h1>{all.names}</h1>
-      <p>{c.church}</p>
-      <p>{c.date}</p>
-      <a class="rsvp-pill" href="#rsvp" data-rsvp-open>{c.rsvp}</a>
-    </div>
-
-    <figure class="reception" data-reveal>
-      <Image
-        src={recatadou}
-        alt="Watercolour of the Salle du Recatadou: a stone house on a clifftop above the Ardèche gorge"
-        widths={[560, 1048]}
-        sizes="(max-width: 760px) 84vw, 640px"
-      />
-      <figcaption class="note note--reception">
-        <span>{c.notes.reception[0]}<br />{c.notes.reception[1]}</span>
-        <Arrow transform="rotate(10deg)" />
-      </figcaption>
-    </figure>
-  </section>
-
-  <section class="sheet" id="venues" style="--tilt: 0.6deg" aria-labelledby="venues-title">
+  <section class="sheet" id="venues" style="--tilt: 0.5deg" aria-labelledby="venues-title">
     <h2 class="label label--1" id="venues-title" style="--r: -3deg"><span>{c.venuesTitle}</span></h2>
-    <div class="venue-grid">
-      <article class="venue" data-reveal>
+
+    <!-- each venue beside its watercolour, with the hand-drawn arrow labels from the old Wix site -->
+    <article class="venue venue--ceremony">
+      <figure class="art">
+        <Image
+          src={church}
+          alt="Watercolour of the stone steps in L’Argentiere climbing to the church spire, past Josephine’s grandparents’ house"
+          widths={[560, 1024]}
+          sizes="(max-width: 720px) 90vw, 480px"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <figcaption class="note note--ceremony">
+          <span>{c.notes.ceremony[0]}<br />{c.notes.ceremony[1]}</span>
+          <Arrow transform="scaleX(-1)" />
+        </figcaption>
+        <p class="note note--grandparents">
+          <Arrow transform="rotate(180deg)" />
+          <span>{c.notes.grandparents[0]}<br />{c.notes.grandparents[1]}</span>
+        </p>
+      </figure>
+      <div class="venue-text" data-reveal>
         <p class="eyebrow">{c.ceremony.label}</p>
         <h3>{c.ceremony.name}</h3>
         <p class="muted">{c.ceremony.town}</p>
         <a class="text-link" href={MAPS.ceremony} target="_blank" rel="noopener">{c.directions} ↗</a>
-      </article>
-      <article class="venue" data-reveal>
+      </div>
+    </article>
+
+    <article class="venue venue--reception">
+      <figure class="art">
+        <Image
+          src={recatadou}
+          alt="Watercolour of the Salle du Recatadou: a stone house on a clifftop above the Ardèche gorge"
+          widths={[560, 1048]}
+          sizes="(max-width: 720px) 90vw, 480px"
+        />
+        <figcaption class="note note--reception">
+          <span>{c.notes.reception[0]}<br />{c.notes.reception[1]}</span>
+          <Arrow transform="rotate(10deg)" />
+        </figcaption>
+      </figure>
+      <div class="venue-text" data-reveal>
         <p class="eyebrow">{c.reception.label}</p>
         <h3>{c.reception.name}</h3>
         <p class="muted">{c.reception.town}</p>
         <a class="text-link" href={MAPS.reception} target="_blank" rel="noopener">{c.directions} ↗</a>
-      </article>
-    </div>
+      </div>
+    </article>
   </section>
 
   <section class="sheet" id="schedule" style="--tilt: -0.4deg" aria-labelledby="schedule-title">
@@ -158,7 +153,7 @@ const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
     flex-direction: column;
     gap: clamp(72px, 10vw, 104px);
     min-height: 100svh;
-    padding: 96px clamp(10px, 4vw, 40px) 112px;
+    padding: 128px clamp(10px, 4vw, 40px) 112px;
     background: #8ea2bb var(--denim) center top / 740px auto repeat;
   }
 
@@ -181,11 +176,6 @@ const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
     inset: clamp(15px, 2.8vw, 26px);
     border: 1.5px dashed rgba(214, 160, 100, 0.55);
     pointer-events: none;
-  }
-  .intro {
-    padding-top: clamp(40px, 6vw, 64px);
-    padding-left: clamp(16px, 4vw, 48px);
-    padding-right: clamp(16px, 4vw, 48px);
   }
   .sheet-intro {
     text-align: center;
@@ -251,6 +241,46 @@ const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
     width: 100%;
   }
 
+  /* a venue: its watercolour beside its details, alternating sides */
+  .venue {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: clamp(24px, 5vw, 56px);
+    align-items: center;
+  }
+  .venue--reception {
+    grid-template-columns: 1fr 1.35fr;
+    margin-top: clamp(80px, 10vw, 104px);
+  }
+  .venue--reception .art {
+    order: 2;
+    /* room on the left for its label and arrow */
+    padding-left: 18%;
+  }
+  .venue-text {
+    text-align: center;
+  }
+  .venue h3 {
+    font-size: clamp(1.5rem, 3.4vw, 1.9rem);
+    margin-bottom: 6px;
+  }
+  .venue .muted {
+    margin-bottom: 10px;
+  }
+  @media (max-width: 720px) {
+    .venue,
+    .venue--reception {
+      grid-template-columns: 1fr;
+    }
+    .venue--reception .art {
+      order: 0;
+    }
+    .venue--ceremony .venue-text {
+      /* clear the grandparents label hanging below the picture */
+      margin-top: 48px;
+    }
+  }
+
   /* hand-written annotations with arrows, as on the old Wix site */
   .note {
     position: absolute;
@@ -263,98 +293,32 @@ const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
     text-align: center;
   }
   .note :global(.arrow) {
-    width: clamp(40px, 9vw, 80px);
+    width: clamp(36px, 6.5vw, 64px);
   }
-
-  .church {
-    max-width: 900px;
-    margin: 0 auto;
-  }
+  /* "Ceremony · Église" just above the top-right of the picture, arrow down to the spire */
   .note--ceremony {
-    right: 2%;
-    top: 9%;
+    right: -2%;
+    top: -16%;
   }
   .note--ceremony :global(.arrow) {
     margin: 4px 0 0 18%;
   }
+  /* "To Josephine's grandparents" under the picture, arrow up to the houses */
   .note--grandparents {
-    left: 6%;
-    top: 97%;
+    left: 4%;
+    top: 96%;
   }
   .note--grandparents :global(.arrow) {
-    margin: 0 0 6px -4%;
+    margin: 0 0 4px -4%;
   }
-
-  .title {
-    text-align: center;
-    padding: clamp(72px, 12vw, 120px) var(--gutter) 0;
-    animation: rise 1.2s ease both;
-  }
-  .title h1 {
-    font-size: clamp(2.7rem, 8.5vw, 4.4rem);
-    line-height: 1;
-    margin-bottom: 18px;
-  }
-  .title p {
-    font-size: clamp(1.1rem, 3vw, 1.4rem);
-    margin: 0 0 10px;
-  }
-  .rsvp-pill {
-    display: inline-block;
-    margin-top: 28px;
-    padding: 8px 30px 10px;
-    border-radius: var(--radius-pill);
-    background: #fff;
-    box-shadow: 0 6px 18px rgba(44, 44, 44, 0.16);
-    color: var(--color-headline);
-    font-family: var(--font-headline);
-    font-size: clamp(1.4rem, 4vw, 1.75rem);
-    letter-spacing: 0.04em;
-    text-decoration: none;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .rsvp-pill:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 24px rgba(44, 44, 44, 0.2);
-  }
-  @keyframes rise {
-    from {
-      opacity: 0;
-      transform: translateY(14px);
-    }
-  }
-
-  .reception {
-    max-width: 760px;
-    margin: clamp(48px, 8vw, 72px) auto 0;
-    padding: 0 var(--gutter) 0 calc(var(--gutter) + 14%);
-  }
+  /* "Reception · Salle du Recatadou" to the left of the clifftop, arrow pointing in */
   .note--reception {
-    left: var(--gutter);
-    top: 9%;
+    left: 0;
+    top: 8%;
   }
   .note--reception :global(.arrow) {
-    margin: 4px 0 0 30%;
+    margin: 4px 0 0 40%;
   }
-
-  .venue-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-    gap: 48px;
-    max-width: 760px;
-    margin: 0 auto;
-  }
-  .venue {
-    text-align: center;
-  }
-  .venue h3 {
-    font-size: 1.7rem;
-    margin-bottom: 6px;
-  }
-  .venue .muted {
-    margin-bottom: 10px;
-  }
-
 
   .timeline {
     list-style: none;

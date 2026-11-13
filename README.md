@@ -28,7 +28,7 @@ npm run preview    # serve the built site
 | Images | `src/assets/` (optimised automatically at build) |
 | Colours, fonts, spacing | `src/styles/global.css` (`:root` tokens) |
 | Page layouts | `src/views/*.astro` (each is used by both `src/pages/` and `src/pages/fr/`) |
-| Menu and header | `src/layouts/Base.astro` |
+| Top bar (page links and language) | `src/layouts/Base.astro` |
 | RSVP popup | `src/components/RsvpDialog.astro` |
 | Placeholder section vignettes | `src/components/Vignette.astro` |
 

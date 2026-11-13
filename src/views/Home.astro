@@ -21,7 +21,7 @@ const portrait = await getImage({ src: collagePortrait, widths: [450, 900], form
 const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
 ---
 
-<Base lang={lang} menu={false}>
+<Base lang={lang} pageLinks={false}>
   <section class="stage" style={`--denim: url(${denim.src})`}>
     <div class="frame">
       <picture>
