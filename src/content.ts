@@ -88,7 +88,7 @@ const en = {
     // `map` ('ceremony' | 'reception') adds a Directions link. [CONFIRM] all times and notes
     items: [
       { time: '4 p.m.', provisional: true, title: 'We get married', place: 'Église Notre-Dame des Pommiers', map: 'ceremony', note: 'Please arrive at ten to four.', art: 'church' },
-      { time: '5 p.m.', title: 'On the road', note: 'About 25 minutes by car to Labeaume. Details on getting there coming soon.', art: 'car' },
+      { time: '5 p.m.', title: 'On the road', map: 'reception', note: 'About 25 minutes by car to Labeaume.', art: 'car' },
       { time: '5.30 p.m.', title: 'Let’s raise a glass', place: 'Salle du Recatadou', map: 'reception', note: 'Drinks and canapés in the sunshine.', art: 'reception' },
       { time: '7.30 p.m.', title: 'Dinner is served', place: 'Salle du Recatadou', note: 'A long table, good food and a few short speeches.', art: 'dinner' },
       { time: '10 p.m.', title: 'To the dance floor', place: 'Salle du Recatadou', note: 'Bring your dancing shoes.', art: 'dance' },
@@ -227,7 +227,7 @@ const fr: Content = {
     title: 'Programme',
     items: [
       { time: '16h', provisional: true, title: 'Nous nous marions', place: 'Église Notre-Dame des Pommiers', map: 'ceremony', note: 'Merci d’arriver à 15h50.', art: 'church' },
-      { time: '17h', title: 'En route', note: 'Environ 25 minutes en voiture jusqu’à Labeaume. Détails du trajet à venir.', art: 'car' },
+      { time: '17h', title: 'En route', map: 'reception', note: 'Environ 25 minutes en voiture jusqu’à Labeaume.', art: 'car' },
       { time: '17h30', title: 'Levons nos verres', place: 'Salle du Recatadou', map: 'reception', note: 'Vin d’honneur et canapés au soleil.', art: 'reception' },
       { time: '19h30', title: 'À table !', place: 'Salle du Recatadou', note: 'Une longue tablée, un bon repas et quelques courts discours.', art: 'dinner' },
       { time: '22h', title: 'Sur la piste de danse', place: 'Salle du Recatadou', note: 'Prévoyez vos chaussures de danse.', art: 'dance' },

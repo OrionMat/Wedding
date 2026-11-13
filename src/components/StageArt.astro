@@ -7,6 +7,8 @@
 import { Image } from 'astro:assets';
 import church from '../assets/illus-church.png';
 import recatadou from '../assets/illus-recatadou.png';
+// an animated GIF, so it's served as it is (resizing would drop the animation)
+import cars from '../assets/illus-cars.gif';
 import type { StageArt } from '../content';
 
 interface Props {
@@ -54,6 +56,12 @@ const bulbs = [
   }
 
   {
+    art === 'car' && (
+      <img src={cars.src} width={cars.width} height={cars.height} alt="" loading="lazy" decoding="async" class="picture picture--cars" />
+    )
+  }
+
+  {
     art === 'reception' && (
       <>
         <Image src={recatadou} alt="" widths={[480, 960]} sizes="(max-width: 700px) 70vw, 340px" class="picture" />
@@ -78,7 +86,7 @@ const bulbs = [
   }
 
   {
-    art !== 'church' && art !== 'reception' && (
+    art !== 'church' && art !== 'reception' && art !== 'car' && (
       <svg class="drawing" viewBox="0 0 320 220" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <defs>
           <filter id={wash} x="-20%" y="-20%" width="140%" height="140%">
@@ -87,40 +95,6 @@ const bulbs = [
             <feGaussianBlur stdDeviation="1.6" />
           </filter>
         </defs>
-
-        {art === 'car' && (
-          <g>
-            <g filter={`url(#${wash})`} opacity="0.5">
-              <circle cx="262" cy="50" r="22" fill="#e8c88f" />
-              <ellipse cx="80" cy="190" rx="140" ry="38" fill="#a9b98c" />
-              <ellipse cx="262" cy="196" rx="120" ry="32" fill="#c9d4a8" />
-            </g>
-            <g stroke={ink} stroke-width="1.6">
-              <path d="M0 196 C 80 178, 200 214, 320 192" />
-              <path d="M0 206 C 80 190, 200 224, 320 202" stroke-dasharray="6 10" opacity="0.5" />
-              <path class="whoosh" d="M28 132 H 52 M20 146 H 48 M32 158 H 54" opacity="0.6" />
-            </g>
-            <g class="car">
-              <path d="M70 160 Q 72 128 110 120 Q 150 104 196 112 Q 226 118 236 140 L 244 150 Q 248 160 240 166 L 76 166 Q 68 166 70 160 Z" fill="#8c9d6a" opacity="0.55" filter={`url(#${wash})`} />
-              <g stroke={ink} stroke-width="1.8">
-                <path d="M70 160 Q 72 128 110 120 Q 150 104 196 112 Q 226 118 236 140 L 244 150 Q 248 160 240 166 L 76 166 Q 68 166 70 160 Z" />
-                <path d="M114 124 Q 150 112 190 117 L 198 140 L 110 140 Z" fill="#dbe6f0" />
-                <path d="M152 115 V 140 M152 140 V 160 M110 140 Q 108 152 112 160" />
-                <circle cx="238" cy="149" r="5" fill="#f3e2b0" />
-              </g>
-              <g class="wheel" stroke={ink} stroke-width="1.8">
-                <circle cx="110" cy="166" r="14" fill="#fff" />
-                <circle cx="110" cy="166" r="4" />
-                <path d="M110 152 V 180 M96 166 H 124" />
-              </g>
-              <g class="wheel" stroke={ink} stroke-width="1.8">
-                <circle cx="206" cy="166" r="14" fill="#fff" />
-                <circle cx="206" cy="166" r="4" />
-                <path d="M206 152 V 180 M192 166 H 220" />
-              </g>
-            </g>
-          </g>
-        )}
 
         {art === 'dinner' && (
           <g>
@@ -344,28 +318,11 @@ const bulbs = [
     }
   }
 
-  /* car: bobbing along, wheels turning */
-  .car {
-    animation: bob 0.45s ease-in-out infinite alternate;
-  }
-  @keyframes bob {
-    to {
-      transform: translateY(-2.5px);
-    }
-  }
-  .wheel {
-    transform-box: fill-box;
-    transform-origin: center;
-    animation: spin 0.9s linear infinite;
-  }
-  .whoosh {
-    animation: whoosh 0.9s ease-in-out infinite alternate;
-  }
-  @keyframes whoosh {
-    from {
-      transform: translateX(6px);
-      opacity: 0.2;
-    }
+  /* car: the convoy GIF; its white backdrop melts into the paper */
+  .picture--cars {
+    height: auto;
+    align-self: center;
+    mix-blend-mode: multiply;
   }
 
   /* dinner: candle flames flickering */
