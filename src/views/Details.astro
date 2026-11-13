@@ -203,7 +203,6 @@ const c = all.info;
   }
   .title h1 {
     font-size: clamp(2.7rem, 8.5vw, 4.4rem);
-    letter-spacing: -0.02em;
     line-height: 1;
     margin-bottom: 18px;
   }
@@ -218,9 +217,10 @@ const c = all.info;
     border-radius: var(--radius-pill);
     background: #fff;
     box-shadow: 0 6px 18px rgba(44, 44, 44, 0.16);
-    color: #2171b5;
+    color: var(--color-headline);
+    font-family: var(--font-headline);
     font-size: clamp(1.4rem, 4vw, 1.75rem);
-    letter-spacing: 0.02em;
+    letter-spacing: 0.04em;
     text-decoration: none;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }

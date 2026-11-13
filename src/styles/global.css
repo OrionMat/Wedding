@@ -9,15 +9,17 @@
   --color-on-ink: #fdfbf7;
   --color-denim: #6f86a6;
 
-  /* matches the old Wix site: Caudex for text, Caslon semibold for image labels,
-     Public Sans only for buttons and form fields */
-  --font-display: 'Caudex', Georgia, serif;
+  /* Same pairing as the home letter everywhere: Germania One in dark brown for names
+     and headings (after alilabelle.co), Caudex for text, Caslon semibold for the
+     image labels, Public Sans only for buttons and form fields */
+  /* Germania One draws V/v rounded, so "RSVP" read as "RSUP"; Zilla Slab is loaded
+     with only those two letters, so it supplies V/v and Germania One the rest */
+  --font-headline: 'Zilla Slab', 'Germania One', 'Caudex', Georgia, serif;
+  --color-headline: #4b3618;
+  --font-display: var(--font-headline);
   --font-serif: 'Caudex', Georgia, serif;
   --font-accent: 'Caudex', Georgia, serif;
   --font-label: 'Libre Caslon Text', 'Adobe Caslon Pro', Georgia, serif;
-  /* wedge-serif display face for the names on the home letter (after alilabelle.co) */
-  --font-headline: 'Germania One', 'Caudex', Georgia, serif;
-  --color-headline: #4b3618;
   --font-sans: 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   --radius-field: 15px;
@@ -72,6 +74,7 @@ h3 {
   font-family: var(--font-display);
   font-weight: 400;
   line-height: 1.1;
+  color: var(--color-headline);
   margin: 0;
   text-wrap: balance;
 }

@@ -4,7 +4,7 @@ import Base from '../layouts/Base.astro';
 import collage from '../assets/save-the-date-collage.jpg';
 import collagePortrait from '../assets/save-the-date-intro.jpg';
 import denimTile from '../assets/denim-tile.jpg';
-import { type Lang } from '../i18n';
+import { href, type Lang } from '../i18n';
 import { t } from '../content';
 
 interface Props {
@@ -21,7 +21,7 @@ const portrait = await getImage({ src: collagePortrait, widths: [450, 900], form
 const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
 ---
 
-<Base lang={lang}>
+<Base lang={lang} menu={false}>
   <section class="stage" style={`--denim: url(${denim.src})`}>
     <div class="frame">
       <picture>
@@ -54,10 +54,15 @@ const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
         <p class="detail">{c.info.church}</p>
         <p class="detail">{c.info.date}</p>
       </div>
-      <a class="tag" href="#rsvp" data-rsvp-open>
-        <span class="tag-hole" aria-hidden="true"></span>
-        {c.home.rsvp}
-      </a>
+      <!-- the site's navigation on this page: paper cards tucked under the letter -->
+      <nav class="cards" aria-label={c.nav.menu}>
+        <a class="card card--details" href={href(lang, 'details')}><span>{c.nav.pages.details}</span></a>
+        <a class="card card--registry" href={href(lang, 'registry')}><span>{c.nav.pages.registry}</span></a>
+        <a class="tag" href="#rsvp" data-rsvp-open>
+          <span class="tag-hole" aria-hidden="true"></span>
+          {c.home.rsvp}
+        </a>
+      </nav>
     </div>
   </section>
 </Base>
@@ -165,36 +170,84 @@ const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
     margin-top: calc(var(--u) * 0.7);
   }
 
-  /* kraft luggage tag that sat on the letter in the Wix version */
+  /* Paper cards and the kraft tag overlapping the bottom of the letter, after the
+     printed-ephemera collage on alilabelle.co. Each sits at its own angle (--r). */
+  .cards {
+    display: contents;
+  }
+  .card,
   .tag {
     position: absolute;
-    left: 64%;
-    top: 81%;
+    left: var(--x);
+    top: var(--y);
+    font-family: var(--font-headline);
+    line-height: 1;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    box-shadow: 0 calc(var(--u) * 0.5) calc(var(--u) * 1.2) rgba(0, 0, 0, 0.3);
+    transform: rotate(var(--r));
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .card:hover,
+  .tag:hover,
+  .card:focus-visible,
+  .tag:focus-visible {
+    transform: rotate(calc(var(--r) * 0.6)) translateY(calc(var(--u) * -0.6)) scale(1.05);
+    box-shadow: 0 calc(var(--u) * 0.9) calc(var(--u) * 1.8) rgba(0, 0, 0, 0.32);
+  }
+
+  .card {
+    padding: calc(var(--u) * 0.7);
+    font-size: calc(var(--u) * 2.4);
+    /* faint paper grain */
+    background-image: linear-gradient(170deg, rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0.05));
+  }
+  /* the double printed rule inside each card */
+  .card span {
+    display: block;
+    padding: calc(var(--u) * 1) calc(var(--u) * 1.6) calc(var(--u) * 0.9);
+    border: calc(var(--u) * 0.3) double currentColor;
+  }
+  .card--details {
+    --x: 25.5%;
+    --y: 77%;
+    --r: -7deg;
+    background-color: #8c9d6a;
+    color: #22301a;
+  }
+  .card--registry {
+    --x: 42%;
+    --y: 80.5%;
+    --r: 4deg;
+    background-color: #ebe7c9;
+    color: var(--color-headline);
+  }
+  .card--registry span {
+    border-color: #3e3e3a;
+  }
+
+  /* kraft luggage tag that sat on the letter in the Wix version */
+  .tag {
+    --x: 60.5%;
+    --y: 78.5%;
+    --r: -18deg;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 22px 10px 14px;
+    gap: calc(var(--u) * 0.8);
+    padding: calc(var(--u) * 1) calc(var(--u) * 2.2) calc(var(--u) * 1) calc(var(--u) * 1.4);
     background: var(--color-kraft);
     background-image: linear-gradient(160deg, rgba(255, 255, 255, 0.18), rgba(0, 0, 0, 0.06));
     color: #2c2418;
-    font: 600 clamp(13px, 1.8vmin, 18px) / 1 var(--font-sans);
-    letter-spacing: 0.14em;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    border-radius: 6px 18px 18px 6px;
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
-    transform: rotate(-22deg);
-    transition: transform 0.3s ease;
-  }
-  .tag:hover {
-    transform: rotate(-16deg) scale(1.06);
+    font-size: calc(var(--u) * 2.4);
+    border-radius: calc(var(--u) * 0.6) calc(var(--u) * 1.8) calc(var(--u) * 1.8) calc(var(--u) * 0.6);
   }
   .tag-hole {
-    width: 9px;
-    height: 9px;
+    width: calc(var(--u) * 0.9);
+    height: calc(var(--u) * 0.9);
     border-radius: 50%;
     background: #e9e2d2;
-    box-shadow: inset 0 0 0 2px #c9a24a;
+    box-shadow: inset 0 0 0 calc(var(--u) * 0.2) #c9a24a;
   }
 
   @media (max-aspect-ratio: 3/4) {
@@ -207,9 +260,17 @@ const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
       --letter-height: 51.1%;
       --u: 2cqw;
     }
+    .card--details {
+      --x: 8%;
+      --y: 84%;
+    }
+    .card--registry {
+      --x: 36%;
+      --y: 87%;
+    }
     .tag {
-      left: 34%;
-      top: 88%;
+      --x: 60%;
+      --y: 84.5%;
     }
   }
 </style>
