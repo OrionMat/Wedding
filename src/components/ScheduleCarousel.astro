@@ -22,7 +22,7 @@ const total = c.items.length;
       c.items.map((stage, i) => (
         <li class:list={['stage', { 'is-active': i === 0 }]} aria-roledescription="slide" aria-label={`${i + 1} ${c.of} ${total}`}>
           <p class="time">{stage.time}</p>
-          {stage.provisional && <p class="provisional">{c.provisional}</p>}
+          {stage.provisional && <p class="provisional">{stage.note} {c.provisional}</p>}
           {stage.until && (
             <p class="until">
               {c.until} {stage.until}
@@ -30,7 +30,7 @@ const total = c.items.length;
           )}
           <h3>{stage.title}</h3>
           {stage.place && <p class="place">{stage.place}</p>}
-          {stage.note && <p class="note-line">{stage.note}</p>}
+          {stage.note && !stage.provisional && <p class="note-line">{stage.note}</p>}
           {stage.map && (
             <a class="directions" href={MAPS[stage.map]} target="_blank" rel="noopener">
               {c.map}
@@ -223,10 +223,10 @@ const total = c.items.length;
     color: var(--color-ink-muted);
   }
   .provisional {
-    margin-top: 6px !important;
-    font-size: 14px;
-    font-style: italic;
-    color: var(--color-ink-muted);
+    max-width: 30em;
+    margin: 10px 0 6px !important;
+    text-wrap: balance;
+    color: var(--color-ink-soft);
   }
   .stage h3 {
     margin: 12px 0 6px;
