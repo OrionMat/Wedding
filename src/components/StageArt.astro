@@ -1,6 +1,6 @@
 ---
 // The illustration for one schedule stage, with a small looping animation.
-// 'church' and 'reception' use the real watercolours, 'car' the convoy picture; the others are hand-drawn
+// 'church' and 'reception' use the real watercolours, 'car' the convoy watercolour; the others are hand-drawn
 // placeholders in the same washed style until matching watercolours are made
 // (see CONTENT_TODO.md). Animations pause on stages that aren't showing and are
 // switched off for people who prefer reduced motion.
@@ -9,12 +9,12 @@ import church from '../assets/illus-church.png';
 import recatadou from '../assets/illus-recatadou.png';
 import cars from '../assets/illus-cars.png';
 import dinner from '../assets/illus-dinner.png';
-// the convoy stands still while its wheels turn: a few spokes drawn over each plain
-// hubcap spin round. Centre x, centre y and hubcap radius, in the picture's pixels (719 × 236).
+// the convoy stands still while its wheels whirl: a few spokes drawn over each
+// hubcap spin round fast. Centre x, centre y and hubcap radius, in the picture's pixels (1838 × 544).
 const wheels = [
-  [79, 190, 12], [239, 189, 11.5],
-  [323, 190, 9.5], [423, 190, 9.5],
-  [512, 189, 10], [654, 189, 10],
+  [160, 473, 36], [571, 471, 36],
+  [809, 476, 29], [1059, 477, 29],
+  [1301, 477, 33], [1692, 476, 33],
 ];
 import type { StageArt } from '../content';
 
@@ -72,14 +72,14 @@ const bulbs = [
   {
     art === 'car' && (
       <div class="convoy">
-        <Image src={cars} alt="" widths={[719]} sizes="(max-width: 700px) 90vw, 560px" class="picture" />
-        <svg class="hubs" viewBox="0 0 719 236" fill="none" stroke={ink} stroke-linecap="round">
+        <Image src={cars} alt="" widths={[640, 1280]} sizes="(max-width: 700px) 90vw, 600px" class="picture" />
+        <svg class="hubs" viewBox={`0 0 ${cars.width} ${cars.height}`} fill="none" stroke={ink} stroke-linecap="round">
           {wheels.map(([x, y, r]) => (
             <g class="hub" style={`transform-origin:${x}px ${y}px`}>
               {[0, 72, 144, 216, 288].map((a) => (
-                <path d={`M${x} ${y - 2.5} V ${y - r + 1.5}`} transform={`rotate(${a} ${x} ${y})`} stroke-width="1.6" opacity="0.7" />
+                <path d={`M${x} ${y - 8} V ${y - r + 4}`} transform={`rotate(${a} ${x} ${y})`} stroke-width="5" opacity="0.6" />
               ))}
-              <circle cx={x} cy={y} r="2.4" fill={ink} stroke="none" opacity="0.8" />
+              <circle cx={x} cy={y} r="7" fill={ink} stroke="none" opacity="0.7" />
             </g>
           ))}
         </svg>
@@ -333,8 +333,8 @@ const bulbs = [
   .convoy {
     position: relative;
     width: 100%;
-    max-width: 560px;
-    align-self: center;
+    max-width: 600px;
+    align-self: flex-end;
   }
   .convoy :global(.picture) {
     display: block;
@@ -350,7 +350,7 @@ const bulbs = [
     height: 100%;
   }
   .hub {
-    animation: spin 0.8s linear infinite;
+    animation: spin 0.35s linear infinite;
   }
 
   /* dinner: the long table, its candles lit and flickering; the picture's white
