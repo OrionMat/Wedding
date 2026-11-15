@@ -3,9 +3,23 @@
 // French copy is a first draft [CONFIRM: have Josephine / family check it].
 
 import type { Lang } from './i18n';
+import { MAPS } from './config';
 
 export type Entry = { meta?: string; title: string; note?: string; link?: string };
 export type Group = { label: string; entries: Entry[] };
+/** a line of HTML text, optionally followed by an indented list (bulleted, or numbered) */
+export type Block = { text: string; list?: string[]; numbered?: boolean };
+
+// links used in the travel bullets
+const a = (label: string, url: string) => `<a href="${url}" target="_blank" rel="noopener">${label}</a>`;
+const BOOKING = 'https://www.booking.com';
+const AIRBNB = 'https://www.airbnb.com';
+const CAR_HIRE = [
+  a('Europcar', 'https://www.europcar.com'),
+  a('Hertz', 'https://www.hertz.com'),
+  a('Turo', 'https://turo.com'),
+  a('Getaround', 'https://getaround.com'),
+].join(', ');
 export type StageArt = 'church' | 'car' | 'reception' | 'dinner' | 'dance' | 'stars';
 export type Stage = {
   time: string;
@@ -48,14 +62,14 @@ const en = {
   },
   info: {
     title: 'Details',
-    church: 'Église Notre-Dame des Pommiers, L’Argentiere',
+    church: 'Église Notre-Dame des Pommiers, Largentière',
     date: 'Saturday 3rd July 2027',
     notes: {
       grandparents: ['To Josephine’s', 'Grandparents'],
     },
     venuesTitle: 'Where we’ll be',
-    ceremony: { label: 'Ceremony', name: 'Église Notre-Dame des Pommiers', town: 'L’Argentiere' },
-    reception: { label: 'Reception', name: 'Salle du Recatadou', town: 'Labeaume' },
+    ceremony: { label: 'Ceremony', name: 'Église Notre-Dame des Pommiers', town: 'Largentière' },
+    reception: { label: 'Reception', name: 'Salle du Récatadou', town: 'Labeaume' },
     directions: 'Directions',
   },
   rsvp: {
@@ -89,9 +103,9 @@ const en = {
     items: [
       { time: '4 p.m.', provisional: true, title: 'We get married', place: 'Église Notre-Dame des Pommiers', map: 'ceremony', note: 'Please arrive at ten to four.', art: 'church' },
       { time: '5 p.m.', title: 'On the road', map: 'reception', note: 'About 25 minutes by car to Labeaume.', art: 'car' },
-      { time: '6 p.m.', title: 'Dawa’s and chill', place: 'Salle du Recatadou', note: 'Drinks and canapés in the evening sunshine.', art: 'reception' },
+      { time: '6 p.m.', title: 'Dawa’s and chill', place: 'Salle du Récatadou', note: 'Drinks and canapés in the evening sunshine.', art: 'reception' },
       { time: '8 p.m.', title: 'Dinner', note: 'Fun tables, good food and a few short speeches.', art: 'dinner' },
-      { time: '10 p.m.', title: 'Hit the dance floor', place: 'Salle du Recatadou', note: 'Get out the dancing shoes.', art: 'dance' },
+      { time: '10 p.m.', title: 'Hit the dance floor', place: 'Salle du Récatadou', note: 'Get out the dancing shoes.', art: 'dance' },
       { time: '6 a.m.', title: 'And then… till sunset', note: 'We can’t wait to celebrate all night with you.', art: 'stars' },
     ] as Stage[],
     until: 'until',
@@ -103,41 +117,36 @@ const en = {
   },
   travel: {
     title: 'Travel & Accommodation',
-    gettingEyebrow: 'Getting to the Ardèche',
-    gettingTitle: 'Arriving in Labeaume',
-    gettingIntro:
-      'Labeaume is a small village in the south of the Ardèche. Public transport around here is limited, so we strongly recommend hiring a car.',
-    getting: [
+    // Plain text, each line optionally followed by an indented list (bulleted, or
+    // numbered with `numbered: true`). Text can hold links, written with a() above.
+    blocks: [
       {
-        label: 'By plane',
-        entries: [
-          { meta: '~2 hr drive', title: 'Montpellier (MPL)', note: 'Hire a car at the airport' },
-          { meta: '~2 hr drive', title: 'Nîmes (FNI)', note: 'Smaller airport, mostly Ryanair' },
-          { meta: '~2.5 hr drive', title: 'Lyon (LYS)', note: 'Hire a car at the airport' },
-          { meta: '~2.5 hr drive', title: 'Marseille (MRS)', note: 'Hire a car at the airport' },
+        text: 'Our wedding is in Ardèche!',
+        list: [
+          `The ceremony will be in Largentière (${a('map', MAPS.ceremony)}).`,
+          `The reception will be in Labeaume (${a('map', MAPS.reception)}).`,
+        ],
+      },
+      { text: 'These are rural French villages, we strongly recommend hiring a car, or finding a seat in someone else’s car.' },
+      {
+        text: `For accommodation ${a('booking.com', BOOKING)}, ${a('airbnb.com', AIRBNB)} are your friends. Look for places in these areas:`,
+        list: [
+          'Labeaume (or anywhere close to the Salle du Récatadou)',
+          'Largentière',
+          'Ruoms',
+          // [CONFIRM] fill in the €, €€ and €€€ places
+          'Gîtes, Airbnbs and campsites nearby are all great choices. It’s peak season in July, so book early. Here are some specific places you could look into: €…, €€…, €€€…',
         ],
       },
       {
-        label: 'By train',
-        entries: [
-          { meta: '~1 hr drive', title: 'Montélimar', note: 'TGV from Paris, then hire a car' },
-          { meta: '~1.5 hr drive', title: 'Avignon TGV', note: 'Direct TGV from Paris and Eurostar connections' },
-          { meta: '~1.5 hr drive', title: 'Valence TGV', note: 'TGV from Paris or Lyon, then hire a car' },
+        text: 'Travel options',
+        numbered: true,
+        list: [
+          'Fly to Lyon and hire a car (most convenient for internationals). Then ~2 hours 30 minutes drive to Largentière or Labeaume.',
+          `Fly or Eurostar to Paris, then TGV train to Montélimar. Collect a hire car in Montélimar and drive ~1 hour to Largentière or Labeaume. Car hire options: ${CAR_HIRE}. You may have to request a Sunday drop-off.`,
         ],
       },
-    ] as Group[],
-    stayEyebrow: 'Staying in the Ardèche',
-    stayTitle: 'Where to Stay',
-    stayIntro:
-      'We recommend staying in or near Labeaume, Ruoms, Vallon-Pont-d’Arc or L’Argentiere. You’ll be close to both the church and the reception, and right by the river.',
-    stay: [
-      // [CONFIRM] real recommendations, room blocks or discount codes
-      { label: '€', entries: [{ title: 'Hotel to be confirmed' }, { title: 'Hotel to be confirmed' }] },
-      { label: '€€', entries: [{ title: 'Hotel to be confirmed' }, { title: 'Hotel to be confirmed' }] },
-      { label: '€€€', entries: [{ title: 'Hotel to be confirmed' }] },
-    ] as Group[],
-    stayOutro:
-      'These are just a starting point. Gîtes, Airbnbs and campsites nearby are all great choices too. It’s peak season in July, so book early!',
+    ] as Block[],
   },
   faqs: {
     title: 'Q&A',
@@ -189,14 +198,14 @@ const fr: Content = {
   },
   info: {
     title: 'Détails',
-    church: 'Église Notre-Dame des Pommiers, L’Argentiere',
+    church: 'Église Notre-Dame des Pommiers, Largentière',
     date: 'Samedi 3 juillet 2027',
     notes: {
       grandparents: ['Chez les grands-parents', 'de Josephine'],
     },
     venuesTitle: 'Où nous trouver',
-    ceremony: { label: 'Cérémonie', name: 'Église Notre-Dame des Pommiers', town: 'L’Argentiere' },
-    reception: { label: 'Réception', name: 'Salle du Recatadou', town: 'Labeaume' },
+    ceremony: { label: 'Cérémonie', name: 'Église Notre-Dame des Pommiers', town: 'Largentière' },
+    reception: { label: 'Réception', name: 'Salle du Récatadou', town: 'Labeaume' },
     directions: 'Itinéraire',
   },
   rsvp: {
@@ -228,9 +237,9 @@ const fr: Content = {
     items: [
       { time: '16h', provisional: true, title: 'Nous nous marions', place: 'Église Notre-Dame des Pommiers', map: 'ceremony', note: 'Merci d’arriver à 15h50.', art: 'church' },
       { time: '17h', title: 'En route', map: 'reception', note: 'Environ 25 minutes en voiture jusqu’à Labeaume.', art: 'car' },
-      { time: '18h', title: 'Dawa et détente', place: 'Salle du Recatadou', note: 'Boissons et canapés au soleil du soir.', art: 'reception' },
+      { time: '18h', title: 'Dawa et détente', place: 'Salle du Récatadou', note: 'Boissons et canapés au soleil du soir.', art: 'reception' },
       { time: '20h', title: 'Dîner', note: 'Des tables joyeuses, un bon repas et quelques courts discours.', art: 'dinner' },
-      { time: '22h', title: 'Tous sur la piste', place: 'Salle du Recatadou', note: 'Sortez vos chaussures de danse.', art: 'dance' },
+      { time: '22h', title: 'Tous sur la piste', place: 'Salle du Récatadou', note: 'Sortez vos chaussures de danse.', art: 'dance' },
       { time: '6h', title: 'Et puis… jusqu’au coucher du soleil', note: 'Nous avons hâte de faire la fête toute la nuit avec vous.', art: 'stars' },
     ],
     until: 'jusqu’à',
@@ -242,40 +251,33 @@ const fr: Content = {
   },
   travel: {
     title: 'Voyage & Hébergement',
-    gettingEyebrow: 'Venir en Ardèche',
-    gettingTitle: 'Arriver à Labeaume',
-    gettingIntro:
-      'Labeaume est un petit village du sud de l’Ardèche. Les transports en commun sont rares ici : nous vous conseillons vivement de louer une voiture.',
-    getting: [
+    blocks: [
       {
-        label: 'En avion',
-        entries: [
-          { meta: '~2 h de route', title: 'Montpellier (MPL)', note: 'Location de voiture à l’aéroport' },
-          { meta: '~2 h de route', title: 'Nîmes (FNI)', note: 'Petit aéroport, surtout Ryanair' },
-          { meta: '~2 h 30 de route', title: 'Lyon (LYS)', note: 'Location de voiture à l’aéroport' },
-          { meta: '~2 h 30 de route', title: 'Marseille (MRS)', note: 'Location de voiture à l’aéroport' },
+        text: 'Notre mariage a lieu en Ardèche !',
+        list: [
+          `La cérémonie aura lieu à Largentière (${a('carte', MAPS.ceremony)}).`,
+          `La réception aura lieu à Labeaume (${a('carte', MAPS.reception)}).`,
+        ],
+      },
+      { text: 'Ce sont des villages ruraux : nous vous conseillons vivement de louer une voiture, ou de trouver une place dans celle de quelqu’un d’autre.' },
+      {
+        text: `Pour l’hébergement, ${a('booking.com', BOOKING)} et ${a('airbnb.com', AIRBNB)} sont vos amis. Cherchez dans ces coins :`,
+        list: [
+          'Labeaume (ou tout près de la Salle du Récatadou)',
+          'Largentière',
+          'Ruoms',
+          'Gîtes, Airbnb et campings des environs sont tous de très bons choix. Juillet est en pleine saison : réservez tôt. Quelques adresses à regarder : €…, €€…, €€€…',
         ],
       },
       {
-        label: 'En train',
-        entries: [
-          { meta: '~1 h de route', title: 'Montélimar', note: 'TGV depuis Paris, puis location de voiture' },
-          { meta: '~1 h 30 de route', title: 'Avignon TGV', note: 'TGV direct depuis Paris' },
-          { meta: '~1 h 30 de route', title: 'Valence TGV', note: 'TGV depuis Paris ou Lyon, puis location de voiture' },
+        text: 'Comment venir',
+        numbered: true,
+        list: [
+          'En avion jusqu’à Lyon, puis location de voiture (le plus pratique depuis l’étranger). Puis environ 2 h 30 de route jusqu’à Largentière ou Labeaume.',
+          `En avion ou en Eurostar jusqu’à Paris, puis TGV jusqu’à Montélimar. Récupérez une voiture de location à Montélimar, puis environ 1 h de route jusqu’à Largentière ou Labeaume. Location de voiture : ${CAR_HIRE}. Il faudra peut-être demander un retour le dimanche.`,
         ],
       },
     ],
-    stayEyebrow: 'Séjourner en Ardèche',
-    stayTitle: 'Où dormir',
-    stayIntro:
-      'Nous vous conseillons de loger à Labeaume, Ruoms, Vallon-Pont-d’Arc ou L’Argentiere : tout près de l’église, de la réception et de la rivière.',
-    stay: [
-      { label: '€', entries: [{ title: 'Hôtel à confirmer' }, { title: 'Hôtel à confirmer' }] },
-      { label: '€€', entries: [{ title: 'Hôtel à confirmer' }, { title: 'Hôtel à confirmer' }] },
-      { label: '€€€', entries: [{ title: 'Hôtel à confirmer' }] },
-    ],
-    stayOutro:
-      'Ce n’est qu’un point de départ : gîtes, Airbnb et campings des environs sont aussi de très bonnes options. Juillet est en pleine saison, réservez tôt !',
   },
   faqs: {
     title: 'Questions & réponses',
