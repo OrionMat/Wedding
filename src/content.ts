@@ -127,15 +127,14 @@ const en = {
           `The reception will be in Labeaume (${a('map', MAPS.reception)}).`,
         ],
       },
-      { text: 'These are rural French villages, we strongly recommend hiring a car, or finding a seat in someone else’s car.' },
+      { text: 'These are rural French villages, so we strongly recommend hiring a car, or finding a seat in someone else’s car.' },
       {
         text: `For accommodation ${a('booking.com', BOOKING)}, ${a('airbnb.com', AIRBNB)} are your friends. Look for places in these areas:`,
         list: [
-          'Labeaume (or anywhere close to the Salle du Récatadou)',
-          'Largentière',
+          'Labeaume - this is the ideal area. The closer you can get to here the better, since it’ll mean a shorter trip back from the reception!',
           'Ruoms',
-          // [CONFIRM] fill in the €, €€ and €€€ places
-          'Gîtes, Airbnbs and campsites nearby are all great choices. It’s peak season in July, so book early. Here are some specific places you could look into: €…, €€…, €€€…',
+          'Largentière',
+          'Hotels, Gîtes, Airbnbs and campsites nearby are all great choices. It’s peak season in July, so book early.',
         ],
       },
       {
@@ -263,10 +262,10 @@ const fr: Content = {
       {
         text: `Pour l’hébergement, ${a('booking.com', BOOKING)} et ${a('airbnb.com', AIRBNB)} sont vos amis. Cherchez dans ces coins :`,
         list: [
-          'Labeaume (ou tout près de la Salle du Récatadou)',
-          'Largentière',
+          'Labeaume - c’est le coin idéal. Plus vous serez près, mieux ce sera : le retour après la réception n’en sera que plus court !',
           'Ruoms',
-          'Gîtes, Airbnb et campings des environs sont tous de très bons choix. Juillet est en pleine saison : réservez tôt. Quelques adresses à regarder : €…, €€…, €€€…',
+          'Largentière',
+          'Hôtels, gîtes, Airbnb et campings des environs sont tous de très bons choix. Juillet est en pleine saison : réservez tôt.',
         ],
       },
       {
