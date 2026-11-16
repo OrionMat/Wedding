@@ -4,6 +4,8 @@ import Base from '../layouts/Base.astro';
 import collage from '../assets/save-the-date-collage.jpg';
 import collagePortrait from '../assets/save-the-date-intro.jpg';
 import denimTile from '../assets/denim-tile.jpg';
+import denimEdgeLeft from '../assets/denim-edge-left.jpg';
+import denimEdgeRight from '../assets/denim-edge-right.jpg';
 import { href, type Lang } from '../i18n';
 import { t } from '../content';
 
@@ -19,10 +21,17 @@ const square = await getImage({ src: collage, widths: [800, 1200, 2048], format:
 const portrait = await getImage({ src: collagePortrait, widths: [450, 900], format: 'webp' });
 // Mirrored patch of denim cut from the collage's corner; fills the sides on wide screens
 const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
+// The collage's own outer strips of denim, mirrored outward band by band, laid either side
+// of it on wide screens so the weave runs straight on past its edges (made from the collage)
+const edgeLeft = await getImage({ src: denimEdgeLeft, format: 'webp', quality: 60 });
+const edgeRight = await getImage({ src: denimEdgeRight, format: 'webp', quality: 60 });
 ---
 
 <Base lang={lang} pageLinks={false}>
-  <section class="stage" style={`--denim: url(${denim.src})`}>
+  <section
+    class="stage"
+    style={`--denim: url(${denim.src}); --edge-left: url(${edgeLeft.src}); --edge-right: url(${edgeRight.src})`}
+  >
     <div class="frame">
       <picture>
         <source media={portraitQuery} srcset={portrait.srcSet.attribute} sizes="100vw" />
@@ -74,8 +83,22 @@ const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
     place-items: center;
     min-height: 100svh;
     overflow: hidden;
-    /* drawn at the same scale as the collage so the weave matches */
-    background: #8ea2bb var(--denim) center / calc(min(100vw, 100svh) * 1480 / 2048) auto repeat;
+    /* beyond the side strips (very wide screens) and above or below the collage (screens
+       a little narrower than square), the denim tile: the collage's own top-left corner (740 x 520 of its 2048px),
+       mirrored into a 1480 x 1040 repeat. Drawn at the collage's scale and lined up so the
+       tile's corner sits on the collage's corner, so the weave carries on across the edge.
+       50% places the tile's middle at the middle; the offsets move its corner onto the
+       collage's: (tile - collage) / 2 at this scale */
+    --s: min(100vw, 100svh);
+    /* widths of the mirrored side strips at the collage's scale (990 and 960 of its 2048px).
+       50% centres a strip; the offsets move it so its inner edge meets the collage's edge */
+    --lw: calc(var(--s) * 990 / 2048);
+    --rw: calc(var(--s) * 960 / 2048);
+    background:
+      var(--edge-left) calc(50% - (var(--s) + var(--lw)) / 2) 50% / auto var(--s) no-repeat,
+      var(--edge-right) calc(50% + (var(--s) + var(--rw)) / 2) 50% / auto var(--s) no-repeat,
+      #8ea2bb var(--denim) calc(50% - var(--s) * 568 / 4096) calc(50% - var(--s) * 1008 / 4096) /
+        calc(var(--s) * 1480 / 2048) auto repeat;
   }
 
   .frame {
@@ -90,12 +113,6 @@ const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
     --letter-height: 47.1%;
     /* text scales with the collage; 1u = 1% of the collage's width */
     --u: 1cqw;
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent),
-      linear-gradient(to bottom, transparent, #000 5%, #000 95%, transparent);
-    -webkit-mask-composite: source-in;
-    mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent),
-      linear-gradient(to bottom, transparent, #000 5%, #000 95%, transparent);
-    mask-composite: intersect;
   }
   .frame img {
     width: 100%;
@@ -263,8 +280,20 @@ const denim = await getImage({ src: denimTile, width: 1480, format: 'webp' });
   }
 
   @media (max-aspect-ratio: 3/4) {
+    /* on phones the collage sits on the bottom of the screen, so its foot (the luggage tag
+       and the photo strip) runs off the bottom edge as in the photo */
+    /* the phone photo is a different shot, with a slightly lighter denim and a coarser
+       weave for its width: the tile is drawn so its threads come out the same size as the
+       photo's (1.365 x the photo's width, measured), and lifted a touch */
+    .stage {
+      --fw: min(100vw, calc(100dvh * 9 / 16));
+      place-items: end center;
+      min-height: 100dvh;
+      background: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05)),
+        #8ea2bb var(--denim) center bottom / calc(var(--fw) * 1.365) auto repeat;
+    }
     .frame {
-      width: min(100vw, calc(100svh * 9 / 16));
+      width: min(100vw, calc(100dvh * 9 / 16));
       aspect-ratio: 9 / 16;
       --letter-left: 20.4%;
       --letter-top: 31.3%;

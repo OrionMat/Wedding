@@ -74,7 +74,6 @@ const en = {
   },
   rsvp: {
     title: 'RSVP',
-    intro: 'We’d love to know if you can make it. It only takes a minute.',
     name: 'Name',
     namePh: 'e.g. Maximus Decimus',
     email: 'Email',
@@ -86,10 +85,6 @@ const en = {
     no: 'Sadly can’t attend',
     guests: 'Number of guests (including you)',
     plusOne: 'Guest name(s)',
-    dietary: 'Dietary requirements',
-    dietaryPh: 'Vegetarian, allergies, anything we should know',
-    song: 'A song that’ll get you dancing',
-    message: 'A message for us',
     submit: 'Send RSVP',
     sending: 'Sending…',
     thanksYes: 'Merci! We can’t wait to celebrate with you.',
@@ -164,7 +159,6 @@ const en = {
   },
   registry: {
     title: 'Registry',
-    soon: 'Coming soon',
     text: 'We’re still putting this together. Check back closer to the day!',
   },
 };
@@ -209,7 +203,6 @@ const fr: Content = {
   },
   rsvp: {
     title: 'RSVP',
-    intro: 'Dites-nous si vous pourrez venir, cela ne prend qu’une minute.',
     name: 'Nom',
     namePh: 'ex. Maximus Decimus',
     email: 'E-mail',
@@ -221,10 +214,6 @@ const fr: Content = {
     no: 'Hélas, je ne pourrai pas venir',
     guests: 'Nombre de personnes (vous compris)',
     plusOne: 'Nom(s) des invités',
-    dietary: 'Régime alimentaire',
-    dietaryPh: 'Végétarien, allergies, tout ce qu’il faut savoir',
-    song: 'Une chanson pour vous faire danser',
-    message: 'Un petit mot pour nous',
     submit: 'Envoyer',
     sending: 'Envoi…',
     thanksYes: 'Merci ! Nous avons hâte de faire la fête avec vous.',
@@ -294,7 +283,6 @@ const fr: Content = {
   },
   registry: {
     title: 'Liste de mariage',
-    soon: 'Bientôt disponible',
     text: 'Nous y travaillons encore. Revenez un peu plus près du jour J !',
   },
 };

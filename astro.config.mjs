@@ -27,7 +27,6 @@ const dropUnusedImages = () => ({
 });
 
 export default defineConfig({
-  // TODO: set to the final domain once DNS is moved off Wix
   site: 'https://www.orion-josephine.com',
   trailingSlash: 'ignore',
   i18n: {

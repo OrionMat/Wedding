@@ -22,7 +22,6 @@ const netlify = RSVP_PROVIDER === 'netlify';
   </button>
 
   <h2 id="rsvp-title">{c.title}</h2>
-  <p class="intro muted">{c.intro}</p>
 
   <form
     class="rsvp"
@@ -34,13 +33,12 @@ const netlify = RSVP_PROVIDER === 'netlify';
     netlify-honeypot={netlify ? 'bot-field' : undefined}
   >
     {netlify && <input type="hidden" name="form-name" value="rsvp" />}
-    <input type="hidden" name="language" value={lang} />
     <p class="sr-only"><label>Don’t fill this in: <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
 
     <div class="row">
       <label class="field">
         <span>{c.name}</span>
-        <input name="name" required autocomplete="name" placeholder={c.namePh} />
+        <input name="name" type="text" required autocomplete="name" placeholder={c.namePh} />
       </label>
       <label class="field">
         <span>{c.email}</span>
@@ -50,7 +48,7 @@ const netlify = RSVP_PROVIDER === 'netlify';
 
     <label class="field">
       <span>{c.address}</span>
-      <textarea name="address" rows="2" autocomplete="street-address"></textarea>
+      <input name="address" type="text" autocomplete="street-address" />
       <small>{c.addressHint}</small>
     </label>
 
@@ -71,20 +69,11 @@ const netlify = RSVP_PROVIDER === 'netlify';
           <input name="guest_names" />
         </label>
       </div>
-      <label class="field">
-        <span>{c.dietary}</span>
-        <input name="dietary" placeholder={c.dietaryPh} />
-      </label>
-      <label class="field">
-        <span>{c.song}</span>
-        <input name="song" />
-      </label>
     </fieldset>
 
-    <label class="field">
-      <span>{c.message}</span>
-      <textarea name="message" rows="3"></textarea>
-    </label>
+    <!-- kept after the guest's answers: Netlify titles each submission with the first field
+         that has something in it, and that should be the guest's name -->
+    <input type="hidden" name="language" value={lang} />
 
     <button class="btn submit" type="submit" data-label={c.submit} data-sending={c.sending}>{c.submit}</button>
     <p class="status" role="status" aria-live="polite" data-error={c.error}></p>
@@ -121,9 +110,14 @@ const netlify = RSVP_PROVIDER === 'netlify';
     if (target.closest('[data-rsvp-open]')) {
       e.preventDefault();
       open();
-    } else if (target.closest('[data-rsvp-close]') || target === dialog) {
-      // a click on the dialog element itself is a click on the backdrop
+    } else if (target.closest('[data-rsvp-close]')) {
       close();
+    } else if (target === dialog && dialog.open) {
+      // the dialog element is both the popup box and its backdrop, so only close when the
+      // click landed outside the box: a click on the box's own padding mustn't close it
+      const r = dialog.getBoundingClientRect();
+      const { clientX: x, clientY: y } = e as MouseEvent;
+      if (x < r.left || x > r.right || y < r.top || y > r.bottom) close();
     }
   });
   if (location.hash === '#rsvp') open();
@@ -153,6 +147,8 @@ const netlify = RSVP_PROVIDER === 'netlify';
       const yes = data.get('attending') === 'yes';
       thanks.querySelector('p')!.textContent = yes ? thanks.dataset.thanksYes! : thanks.dataset.thanksNo!;
       form.hidden = true;
+      submit.disabled = false;
+      submit.textContent = submit.dataset.label!;
       thanks.hidden = false;
       thanks.focus();
     } catch {
@@ -215,16 +211,15 @@ const netlify = RSVP_PROVIDER === 'netlify';
   h2 {
     font-size: clamp(2rem, 6vw, 2.6rem);
     text-align: center;
-    margin-bottom: 8px;
-  }
-  .intro {
-    text-align: center;
     margin-bottom: 28px;
   }
 
   .rsvp {
     display: grid;
     gap: 20px;
+  }
+  .rsvp[hidden] {
+    display: none;
   }
   .row {
     display: grid;
@@ -240,8 +235,7 @@ const netlify = RSVP_PROVIDER === 'netlify';
     color: var(--color-ink-muted);
     font-size: 13px;
   }
-  input:not([type='radio']),
-  textarea {
+  input:not([type='radio']) {
     width: 100%;
     min-height: 46px;
     padding: 11px 16px;
@@ -251,15 +245,19 @@ const netlify = RSVP_PROVIDER === 'netlify';
     color: var(--color-ink);
     font: 16px/1.4 var(--font-sans);
   }
-  textarea {
-    resize: vertical;
-  }
-  input::placeholder,
-  textarea::placeholder {
+  input::placeholder {
     color: rgba(44, 44, 44, 0.45);
   }
-  input:focus,
-  textarea:focus {
+  input:-webkit-autofill {
+    -webkit-text-fill-color: var(--color-ink);
+    /* the fields' see-through cream over the popup's paper */
+    box-shadow: 0 0 0 100px #f3eadb inset;
+    caret-color: var(--color-ink);
+  }
+  input:-webkit-autofill:focus {
+    box-shadow: 0 0 0 100px var(--color-bg) inset;
+  }
+  input:focus {
     outline: none;
     border-color: var(--color-ink);
     background: var(--color-bg);
@@ -337,8 +335,8 @@ const netlify = RSVP_PROVIDER === 'netlify';
     text-align: center;
     padding: 24px 0 8px;
     font-family: var(--font-serif);
-    font-size: clamp(1.6rem, 5vw, 2.1rem);
-    line-height: 1.25;
+    font-size: clamp(1.2rem, 3.6vw, 1.45rem);
+    line-height: 1.35;
     outline: none;
   }
 </style>
